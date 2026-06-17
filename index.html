@@ -950,6 +950,7 @@ footer {
   doParallax(); // initialise on load
 
   // ── Smooth scroll
+  document.querySelectorAll('a').forEach(a => {
     a.addEventListener('click', e => {
       const id = a.getAttribute('href');
       if (id === '#') return;
