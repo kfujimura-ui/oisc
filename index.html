@@ -7,7 +7,7 @@
 <style>
 /* ─── Reset & Tokens ─────────────────────────────── */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-:root 
+:root {
   --navy:   #0B2240;
   --navy2:  #0D3360;
   --teal:   #0C8F74;
@@ -36,31 +36,27 @@ img { max-width: 100%; }
 
 /* ─── Navigation ─────────────────────────────────── */
 .site-nav {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
   height: 60px; display: flex; align-items: center;
-  justify-content: center; padding: 0 48px;
+  justify-content: space-between; padding: 0 48px;
   background: rgba(13,42,78,.97); backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255,255,255,.08);
 }
 .nav-logo {
-  display: flex; align-items: center; gap: 10px;
+  display: flex; align-items: center; gap: 0;
   font-size: 19px; font-weight: 900; color: #fff;
-  letter-spacing: .06em;
+  letter-spacing: .06em; text-decoration: none;
 }
 .nav-logo img { height: 36px; width: auto; }
 .nav-logo em { color: var(--teal); font-style: normal; }
-.nav-links { display: flex; gap: 28px; }
+.nav-logo:hover { opacity: .85; }
+.nav-links { display: flex; gap: 28px; align-items: center; }
 .nav-links a {
-  font-size: 16px; font-weight: 700; color: #ffffff;
-  letter-spacing: .02em; transition: opacity .2s;
+  font-size: 15px; font-weight: 700; color: #ffffff;
+  text-decoration: none; letter-spacing: .04em;
+  opacity: .9; transition: opacity .2s;
 }
-.nav-links a:hover { color: #fff; opacity: .72; }
-.nav-cta {
-  background: var(--teal); color: #fff !important;
-  padding: 8px 18px; border-radius: 6px;
-  font-weight: 600 !important; transition: background .2s !important;
-}
-.nav-cta:hover { background: var(--teal2) !important; }
+.nav-links a:hover { opacity: 1; }
 
 /* ─── Hero ───────────────────────────────────────── */
 .hero {
@@ -404,8 +400,8 @@ footer {
 
 <!-- ═══ NAV ═══════════════════════════════════════════════════════════════════ -->
 <nav class="site-nav">
+  <a href="#top" class="nav-logo">OISC<em>.</em></a>
   <div class="nav-links">
-    <a href="#top">Home</a>
     <a href="#participants">Participants</a>
     <a href="#journal">Journal</a>
     <a href="#news">News</a>
