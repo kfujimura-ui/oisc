@@ -13,6 +13,9 @@
   --teal:   #0C8F74;
   --teal2:  #0AA882;
   --amber:  #E07B0A;
+  --gold:     #E0A33A;
+  --gold-ink: #96570A;
+  --gold-deep:#C77D2E;
   --light:  #F6F8FB;
   --white:  #FFFFFF;
   --text:   #1A2B3C;
@@ -48,7 +51,7 @@ img { max-width: 100%; }
   letter-spacing: .06em; text-decoration: none;
 }
 .nav-logo img { height: 36px; width: auto; }
-.nav-logo em { color: var(--teal); font-style: normal; }
+.nav-logo em { color: #fff; font-style: normal; }
 .nav-logo:hover { opacity: .85; }
 .nav-links { display: flex; gap: 28px; align-items: center; }
 .nav-links a {
@@ -63,14 +66,16 @@ img { max-width: 100%; }
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
   text-align: center; padding: 100px 40px 80px;
   background:
-    url('./Images/hero_general_meeting.jpg') center 50% / cover no-repeat;
+    url('./Images/OISC Hero20260623.png') center 50% / cover no-repeat;
   position: relative;
 }
 .hero::before {
   content: '';
   position: absolute; inset: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 25% 55%, rgba(12,143,116,.12) 0%, transparent 70%),
+    radial-gradient(ellipse 70% 60% at 50% 50%, rgba(8,18,36,.34) 0%, rgba(8,18,36,.52) 100%),
+    linear-gradient(rgba(8,18,36,.38), rgba(8,18,36,.50)),
+    radial-gradient(ellipse 60% 50% at 25% 55%, rgba(12,143,116,.10) 0%, transparent 70%),
     radial-gradient(ellipse 40% 40% at 78% 25%, rgba(224,123,10,.08) 0%, transparent 60%);
   pointer-events: none;
 }
@@ -78,8 +83,8 @@ img { max-width: 100%; }
 .hero-badge {
   display: block; width: 100%; margin-bottom: 36px;
   padding: 13px 24px; border-radius: 8px;
-  background: rgba(12,143,116,.15); border: 1px solid rgba(12,143,116,.3);
-  color: #4dd6b8; font-size: 14px; font-weight: 700;
+  background: rgba(224,163,58,.15); border: 1px solid rgba(224,163,58,.38);
+  color: #F0C57A; font-size: 14px; font-weight: 700;
   letter-spacing: .12em; text-transform: uppercase; text-align: center;
 }
 .hero h1 {
@@ -105,12 +110,12 @@ img { max-width: 100%; }
 }
 .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 56px; }
 .btn-primary {
-  background: var(--teal); color: #fff; font-size: 14px; font-weight: 600;
+  background: var(--gold); color: #2a1c05; font-size: 14px; font-weight: 700;
   padding: 13px 30px; border-radius: 6px; letter-spacing: .02em;
   border: none; cursor: pointer; display: inline-block;
   transition: background .2s, transform .15s;
 }
-.btn-primary:hover { background: var(--teal2); transform: translateY(-1px); }
+.btn-primary:hover { background: var(--gold-deep); transform: translateY(-1px); }
 .btn-ghost {
   background: rgba(255,255,255,.1); color: #fff;
   border: 1px solid rgba(255,255,255,.22);
@@ -293,13 +298,13 @@ img { max-width: 100%; }
 
 /* ─── ⑤ Contact ──────────────────────────────────── */
 #contact { background: var(--navy); }
-#contact .sec-tag   { color: #4dd6b8; }
+#contact .sec-tag   { color: #E9C27A; }
 #contact .sec-title { color: #fff; }
 #contact .sec-desc  { color: rgba(255,255,255,.52); }
 .contact-layout { display: grid; grid-template-columns: 1fr 1.1fr; gap: 52px; align-items: start; }
 .contact-meta { color: rgba(255,255,255,.65); }
 .contact-meta p { font-size: 14px; line-height: 1.8; margin-bottom: 20px; }
-.contact-email { color: var(--teal); font-weight: 600; font-size: 14px; }
+.contact-email { color: var(--gold); font-weight: 600; font-size: 14px; }
 .form-box {
   background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.1);
   border-radius: 12px; padding: 28px;
@@ -327,12 +332,12 @@ img { max-width: 100%; }
 .frow select { color: rgba(255,255,255,.65); cursor: pointer; }
 .frow select option { background: var(--navy); }
 .btn-submit {
-  width: 100%; background: var(--teal); color: #fff;
+  width: 100%; background: var(--gold); color: #2a1c05;
   border: none; border-radius: 6px; padding: 13px;
-  font-size: 14px; font-weight: 600; cursor: pointer;
+  font-size: 14px; font-weight: 700; cursor: pointer;
   letter-spacing: .03em; transition: background .2s; font-family: var(--font);
 }
-.btn-submit:hover { background: var(--teal2); }
+.btn-submit:hover { background: var(--gold-deep); }
 
 /* ─── Institution tooltip ────────────────────────── */
 .inst-card {
@@ -391,6 +396,60 @@ footer {
   color: rgba(255,255,255,.55); font-size: 11px; padding: 4px 10px; border-radius: 4px;
 }
 .footer-copy { font-size: 11.5px; color: rgba(255,255,255,.42); text-align: center; line-height: 1.7; }
+
+/* ─── Hamburger toggle (hidden on desktop) ───────── */
+.nav-toggle {
+  display: none; flex-direction: column; justify-content: center; align-items: center;
+  gap: 5px; width: 42px; height: 42px; padding: 0;
+  background: none; border: none; cursor: pointer;
+}
+.nav-toggle span {
+  display: block; width: 24px; height: 2px; border-radius: 2px;
+  background: #fff; transition: transform .25s ease, opacity .25s ease;
+}
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ─── Responsive ─────────────────────────────────── */
+@media (max-width: 860px) {
+  .about-layout, .contact-layout { grid-template-columns: 1fr !important; gap: 40px !important; }
+  .journal-preview-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 760px) {
+  .site-nav { padding: 0 20px; }
+  .nav-toggle { display: flex; }
+  .nav-links {
+    position: fixed; top: 60px; left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: rgba(11,34,64,.98); backdrop-filter: blur(10px);
+    padding: 0 20px; max-height: 0; overflow: hidden;
+    transition: max-height .3s ease; border-bottom: 1px solid rgba(255,255,255,.1);
+  }
+  .nav-links.open { max-height: 340px; padding: 6px 20px 14px; }
+  .nav-links a { width: 100%; padding: 14px 0; font-size: 16px; border-bottom: 1px solid rgba(255,255,255,.08); }
+
+  .section { padding: 64px 22px; }
+  .hero { padding: 96px 22px 72px; }
+  .hero-stats { gap: 28px; flex-wrap: wrap; }
+
+  .ov-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+  .participants-wrap { grid-template-columns: 1fr; }
+  .news-grid { grid-template-columns: 1fr; }
+  .journal-preview-grid { grid-template-columns: 1fr; }
+  .inst-grid { grid-template-columns: repeat(2,1fr) !important; }
+
+  .journal-coming { flex-direction: column; gap: 24px; padding: 28px 22px; text-align: center; }
+  .journal-coming-cover { width: 140px; margin: 0 auto; }
+  .journal-coming-body { text-align: center; }
+}
+@media (max-width: 480px) {
+  .fa-grid { grid-template-columns: 1fr; }
+  .about-stats-grid { grid-template-columns: 1fr 1fr; }
+  .hero-tagline { font-size: 21px; }
+  .sec-title { font-size: 28px; }
+  .proto-badge { bottom: 12px; right: 12px; }
+}
 </style>
 </head>
 <body>
@@ -401,7 +460,10 @@ footer {
 <!-- ═══ NAV ═══════════════════════════════════════════════════════════════════ -->
 <nav class="site-nav">
   <a href="#top" class="nav-logo">OISC<em>.</em></a>
-  <div class="nav-links">
+  <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false" aria-controls="navLinks">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links" id="navLinks">
     <a href="#participants">Participants</a>
     <a href="#journal">Journal</a>
     <a href="#news">News</a>
@@ -414,12 +476,12 @@ footer {
 <section class="hero" id="top">
   <div class="hero-inner">
     <div class="hero-badge">Now Accepting Applications &nbsp;·&nbsp; 2026</div>
-    <h1>OISC <em>2026</em></h1>
+    <h1>OISC</h1>
     <p class="hero-sub">Online International Student Conference</p>
     <p class="hero-tagline">Connecting Student Voices Across Borders</p>
     <span class="hero-tagline-note">※ Tagline TBD — to be confirmed with the FA team</span>
     <div class="hero-btns">
-      <a href="https://forms.gle/XXXXXX" target="_blank" class="btn-primary" style="background:var(--amber);display:flex;align-items:center;gap:8px;">
+      <a href="https://forms.gle/XXXXXX" target="_blank" class="btn-primary" style="background:var(--gold);display:flex;align-items:center;gap:8px;">
         <span>Register Now</span>
         <span style="font-size:11px;opacity:.85;">→</span>
       </a>
@@ -450,7 +512,7 @@ footer {
 <!-- ═══ OVERVIEW ════════════════════════════════════════════════════════════════ -->
 <section class="section" id="overview" style="background:var(--white);padding:72px 40px;">
   <div class="container">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
+    <div class="ov-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;">
       <div>
         <p class="sec-tag">What is OISC?</p>
         <h2 class="sec-title" style="margin-bottom:20px;">A Global Stage for<br>Student Research Project and Virtual Exchange</h2>
@@ -711,7 +773,7 @@ footer {
         <a href="#" class="see-all-link" style="margin-top:8px;display:inline-flex;">About OISC Global Initiative →</a>
         <div style="margin-top:28px;padding-top:24px;border-top:1px solid var(--border)">
           <p style="font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:14px">Partner Institutions 2026</p>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+          <div class="inst-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
             <div class="inst-card">
               <span class="tip">Aichi Institute of Technology · Japan</span>
               <img class="logo-img" src="./Images/AITロゴ（英語1行）jpg.jpg" alt="AIT" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
@@ -919,6 +981,22 @@ footer {
 </footer>
 
 <script>
+  // ── Mobile nav toggle ─────────────────────────────────
+  const navToggle = document.getElementById('navToggle');
+  const navLinks  = document.getElementById('navLinks');
+  if (navToggle && navLinks) {
+    navToggle.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      navToggle.classList.toggle('open', open);
+      navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      navToggle.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+    }));
+  }
+
   // ── Parallax ──────────────────────────────────────────
   const hero        = document.querySelector('.hero');
   const parallaxEls = document.querySelectorAll('.parallax-section');
