@@ -24,7 +24,7 @@
   --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
 }
 html { scroll-behavior: smooth; }
-body { font-family: var(--font); color: var(--text); line-height: 1.6; }
+body { font-family: var(--font); color: var(--text); line-height: 1.6; zoom: 1.1; }
 a { text-decoration: none; color: inherit; }
 img { max-width: 100%; }
 
@@ -63,7 +63,7 @@ img { max-width: 100%; }
 
 /* ─── Hero ───────────────────────────────────────── */
 .hero {
-  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  min-height: calc(100vh / 1.1); display: flex; align-items: center; justify-content: center;
   text-align: center; padding: 100px 40px 80px;
   background:
     url('./Images/OISC Hero20260623.png') center 50% / cover no-repeat;
@@ -770,7 +770,7 @@ footer {
           <div class="a-stat"><span class="n" style="display:block">2020</span><span class="l" style="display:block">Founded</span></div>
           <div class="a-stat"><span class="n">2×/yr</span><span class="l">Sessions</span></div>
         </div>
-        <a href="#" class="see-all-link" style="margin-top:8px;display:inline-flex;">About OISC Global Initiative →</a>
+        <a href="#" class="see-all-link" style="margin-top:8px;display:inline-flex;">About OISC Global Collaborative Learning Initiative →</a>
         <div style="margin-top:28px;padding-top:24px;border-top:1px solid var(--border)">
           <p style="font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:14px">Partner Institutions 2026</p>
           <div class="inst-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
