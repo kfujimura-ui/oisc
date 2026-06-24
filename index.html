@@ -587,7 +587,7 @@ footer {
 <section id="photo-strip" class="parallax-section" style="
   position:relative;
   height:380px;
-  background: url('./Images/Breakout Room.png') center 40% / cover no-repeat;
+  background: #0B2240 url('./Images/Breakout Room.png') center 40% / cover no-repeat;
 ">
   <div style="position:absolute;inset:0;background:linear-gradient(to right,rgba(11,34,64,.80) 0%,rgba(11,34,64,.38) 58%,transparent 100%);display:flex;align-items:center;padding:0 8%;">
     <div>
@@ -618,7 +618,7 @@ footer {
         <div class="p-icon">📋</div>
         <h3>About the Conference</h3>
         <p>OISC runs two online sessions per year — Day 1 (November 7) and Day 2 (December 5). Students collaborate across institutions in mixed international groups.</p>
-        <a href="#about" class="see-all-link">What is OISC? →</a>
+        <a href="#about" class="see-all-link">About Us →</a>
       </div>
     </div>
   </div>
@@ -637,36 +637,36 @@ footer {
     </div>
     <div class="journal-coming">
       <div class="journal-coming-cover">
-        <img src="./Images/oisc_journal_cover_2026.png" alt="OISC Journal 2027 Cover">
+        <img src="./Images/oisc_journal_cover_2026.png" alt="OISC Journal 2026 Cover">
       </div>
       <div class="journal-coming-body">
-        <h3>📚 OISC Journal 2027 — Coming Soon</h3>
+        <h3>📚 OISC Journal 2026 — Coming Soon</h3>
         <p>Entries will be published following the 2026 conference.<br>Each entry includes a presentation video (YouTube) and a research paper (PDF).<br>Expected publication: February – March 2027.</p>
-        <span class="issn-note">ISSN application planned: Fall 2026 — numbering from the 2027 volume</span>
+        <span class="issn-note">ISSN application planned: Fall 2026 — numbering from the 2026 volume</span>
       </div>
     </div>
     <!-- Placeholder cards (greyed out) -->
     <div class="journal-preview-grid" title="Sample layout only">
       <div class="j-card">
-        <div class="j-thumb"><img src="./Images/oisc_journal_cover_2026.png" alt="OISC Journal 2027 Cover"></div>
+        <div class="j-thumb"><img src="./Images/oisc_journal_cover_2026.png" alt="OISC Journal 2026 Cover"></div>
         <div class="j-info">
-          <div class="jtag">OISC Journal 2027</div>
+          <div class="jtag">OISC Journal 2026</div>
           <h4>Cross-Cultural Communication in Online Collaborative Settings</h4>
           <p>AIT × UPI · Indonesia</p>
         </div>
       </div>
       <div class="j-card">
-        <div class="j-thumb"><img src="./Images/oisc_journal_cover_2026.png" alt="OISC Journal 2027 Cover"></div>
+        <div class="j-thumb"><img src="./Images/oisc_journal_cover_2026.png" alt="OISC Journal 2026 Cover"></div>
         <div class="j-info">
-          <div class="jtag">OISC Journal 2027</div>
+          <div class="jtag">OISC Journal 2026</div>
           <h4>Sustainable Futures: Student Perspectives from 6 Countries</h4>
           <p>Konan U. × MUAS · Germany</p>
         </div>
       </div>
       <div class="j-card">
-        <div class="j-thumb"><img src="./Images/oisc_journal_cover_2026.png" alt="OISC Journal 2027 Cover"></div>
+        <div class="j-thumb"><img src="./Images/oisc_journal_cover_2026.png" alt="OISC Journal 2026 Cover"></div>
         <div class="j-info">
-          <div class="jtag">OISC Journal 2027</div>
+          <div class="jtag">OISC Journal 2026</div>
           <h4>Technology and Wellbeing: A Multi-National Student Study</h4>
           <p>NKUST × OSU · Taiwan × Japan</p>
         </div>
@@ -1022,8 +1022,12 @@ footer {
       hero.style.backgroundPosition = `center calc(50% + ${offset}px)`;
     }
 
-    // Photo strips: relative to their position in viewport
+    // Photo strips: relative to their position in viewport.
+    // On narrow viewports a landscape cover image has no vertical slack,
+    // so shifting it would expose gaps — keep it static there.
+    const mobile = window.innerWidth <= 760;
     parallaxEls.forEach(el => {
+      if (mobile) { el.style.backgroundPosition = 'center 40%'; return; }
       const rect   = el.getBoundingClientRect();
       const center = rect.top + rect.height / 2 - window.innerHeight / 2;
       const offset = center * 0.28;
