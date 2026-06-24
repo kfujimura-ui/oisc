@@ -781,13 +781,13 @@ footer {
             </div>
             <div class="inst-card">
               <span class="tip">Konan University · Japan</span>
-              <span style="font-size:10.5px;font-weight:800;color:var(--navy)">KU</span>
-              <span style="font-size:8px;color:var(--muted)">Logo placeholder</span>
+              <img class="logo-img" src="./Images/konan_logo.jpg" alt="Konan University" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+              <span style="display:none;font-size:10.5px;font-weight:800;color:var(--navy)">KU</span>
             </div>
             <div class="inst-card">
               <span class="tip">Osaka Seikei University · Japan</span>
-              <span style="font-size:10.5px;font-weight:800;color:var(--navy)">OSU</span>
-              <span style="font-size:8px;color:var(--muted)">Logo placeholder</span>
+              <img class="logo-img" src="./Images/osaka_seikei_logo.png" alt="Osaka Seikei University" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+              <span style="display:none;font-size:10.5px;font-weight:800;color:var(--navy)">OSU</span>
             </div>
             <div class="inst-card">
               <span class="tip">Bunkyo University · Japan</span>
@@ -850,11 +850,19 @@ footer {
             <div><div class="fa-name"><a href="https://researchmap.jp/fujimurakeiji?lang=en" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(12,143,116,.5);">Keiji Fujimura</a></div><div class="fa-inst">AIT, Japan</div></div>
           </div>
           <div class="fa-card">
-            <div class="fa-av">BJ</div>
+            <div class="fa-av" style="overflow:hidden;padding:0;">
+              <img src="./Images/Faculty%20image/brent.jpg" alt="Brent Jones"
+                style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+                onerror="this.parentElement.textContent='BJ';this.parentElement.style.background='linear-gradient(135deg,var(--navy),var(--teal))'">
+            </div>
             <div><div class="fa-name">Brent Jones</div><div class="fa-inst">Konan U., Japan</div></div>
           </div>
           <div class="fa-card">
-            <div class="fa-av">ED</div>
+            <div class="fa-av" style="overflow:hidden;padding:0;">
+              <img src="./Images/Faculty%20image/emi.jpg" alt="Emi Davis"
+                style="width:100%;height:100%;object-fit:cover;border-radius:50%;"
+                onerror="this.parentElement.textContent='ED';this.parentElement.style.background='linear-gradient(135deg,var(--navy),var(--teal))'">
+            </div>
             <div><div class="fa-name">Emi Davis</div><div class="fa-inst">OSU, Japan</div></div>
           </div>
           <div class="fa-card">
@@ -866,7 +874,11 @@ footer {
             <div><div class="fa-name">Kristin Ziegner-Llewellin</div><div class="fa-inst">MUAS, Germany</div></div>
           </div>
           <div class="fa-card">
-            <div class="fa-av">GG</div>
+            <div class="fa-av" style="overflow:hidden;padding:0;">
+              <img src="./Images/Faculty%20image/gingin.jpg" alt="Gin Gin Gustine"
+                style="width:100%;height:100%;object-fit:cover;border-radius:50%;object-position:center top;"
+                onerror="this.parentElement.textContent='GG';this.parentElement.style.background='linear-gradient(135deg,var(--navy),var(--teal))'">
+            </div>
             <div><div class="fa-name">Gin Gin Gustine</div><div class="fa-inst">UPI, Indonesia</div></div>
           </div>
           <div class="fa-card" style="border-color:rgba(224,123,10,.4);background:rgba(255,248,238,.5)">
