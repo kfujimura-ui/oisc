@@ -696,22 +696,12 @@ footer {
             <span>X (Twitter) Timeline</span>
           </div>
         </div>
-        <div class="tweet-list">
-          <div class="tweet">
-            🌏 OISC 2026 applications are now open! Join students from 6 countries and regions for our annual online international conference. #OISC2026 #COIL
-            <div class="tweet-meta">Jun 15, 2026 &nbsp;·&nbsp; @OISC_official</div>
-          </div>
-          <div class="tweet">
-            📢 OISC 2025 Day 2 — Thank you to all participants from 11 institutions across 5 countries! 🎉 It was an incredible day of student presentations.
-            <div class="tweet-meta">Dec 6, 2025 &nbsp;·&nbsp; @OISC_official</div>
-          </div>
-          <div class="tweet">
-            🎓 Facilitator Training Session 3 complete! Great energy from all groups. See you on Day 1 – Nov 8.
-            <div class="tweet-meta">Oct 30, 2025 &nbsp;·&nbsp; @OISC_official</div>
-          </div>
+        <div style="flex:1;min-height:340px;overflow:auto;">
+          <a class="twitter-timeline" data-height="360" data-chrome="noheader nofooter transparent"
+             href="https://twitter.com/OISC_official?ref_src=twsrc%5Etfw">Posts by @OISC_official</a>
         </div>
-        <div class="embed-note">
-          ※ At launch: replace with embed code from <strong>publish.twitter.com</strong><br>(auto-updates with every post)
+        <div class="embed-note" style="border-top:1px solid var(--border);">
+          <a href="https://x.com/OISC_official" target="_blank" rel="noopener" style="color:var(--gold-ink);font-weight:700;">Follow @OISC_official on X ↗</a>
         </div>
       </div>
       <!-- YouTube -->
@@ -723,31 +713,13 @@ footer {
             <span>Latest Videos &amp; Presentation Archive</span>
           </div>
         </div>
-        <div class="yt-list">
-          <div class="yt-item">
-            <div class="yt-thumb-sm">▶</div>
-            <div>
-              <h5>OISC 2025 Day 2 — Student Presentations Highlights</h5>
-              <span>Dec 6, 2025 &nbsp;·&nbsp; 11 institutions</span>
-            </div>
-          </div>
-          <div class="yt-item">
-            <div class="yt-thumb-sm">▶</div>
-            <div>
-              <h5>OISC 2025 Day 1 Opening Ceremony &amp; Group Sessions</h5>
-              <span>Nov 8, 2025 &nbsp;·&nbsp; International Teams</span>
-            </div>
-          </div>
-          <div class="yt-item">
-            <div class="yt-thumb-sm">▶</div>
-            <div>
-              <h5>Facilitator Training Overview — OISC 2025</h5>
-              <span>Oct 2025 &nbsp;·&nbsp; FA Training Series</span>
-            </div>
-          </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:16px;padding:24px 14px;">
+          <div style="width:58px;height:58px;border-radius:14px;background:#FF0000;display:flex;align-items:center;justify-content:center;color:#fff;font-size:26px;">▶</div>
+          <p style="font-size:13.5px;color:var(--muted);line-height:1.7;max-width:330px;">Presentation highlights, opening ceremonies, and facilitator sessions will be posted here. Subscribe to catch every OISC video.</p>
+          <a href="https://www.youtube.com/@OISC_official" target="_blank" rel="noopener" style="background:#FF0000;color:#fff;font-weight:700;font-size:13px;padding:11px 22px;border-radius:6px;">Subscribe on YouTube ↗</a>
         </div>
-        <div class="embed-note">
-          ※ At launch: paste the YouTube channel URL into the page<br>(auto-updates with every new video)
+        <div class="embed-note" style="border-top:1px solid var(--border);">
+          Latest videos will appear here automatically once uploaded.
         </div>
       </div>
     </div>
@@ -1023,6 +995,7 @@ footer {
   </p>
 </footer>
 
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <script>
   // ── Mobile nav toggle ─────────────────────────────────
   const navToggle = document.getElementById('navToggle');
