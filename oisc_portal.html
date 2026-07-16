@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OISC Portal — Prototype v0.2</title>
+<style>
+:root{
+  --ink:#16233A;--ink-soft:#33425C;--muted:#5A6B82;--faint:#8695A8;
+  --paper:#EEF1F5;--panel:#FFFFFF;--line:#E1E6EC;--line-strong:#CBD3DE;
+  --teal:#0B7A75;--teal-ink:#075E5A;--teal-wash:#E4F1F0;
+  --amber-ink:#8A5200;--amber:#B9791A;--amber-wash:#FBEED5;--amber-line:#E7C784;
+  --shadow:0 1px 2px rgba(22,35,58,.05),0 8px 24px -12px rgba(22,35,58,.14);
+}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif,system-ui,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:0 18px 80px}
+a{color:var(--teal-ink)}
+h1,h2,h3,h4{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;margin:0;letter-spacing:-.01em}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.top{position:sticky;top:0;z-index:30;background:rgba(238,241,245,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:9px;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:700;font-size:19px;color:var(--ink)}
+.brand .dot{color:var(--teal)}
+.brand small{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:600;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.spacer{flex:1}
+.roleswitch{display:inline-flex;background:var(--panel);border:1px solid var(--line-strong);border-radius:999px;padding:3px;gap:2px;box-shadow:var(--shadow)}
+.roleswitch button{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:600;font-size:13px;border:0;background:transparent;color:var(--muted);padding:7px 15px;border-radius:999px;cursor:pointer;transition:.15s;white-space:nowrap;display:flex;align-items:center;gap:6px}
+.roleswitch button[aria-pressed="true"]{color:#fff}
+.roleswitch button.st[aria-pressed="true"]{background:var(--teal)}
+.roleswitch button.fa[aria-pressed="true"]{background:var(--amber);color:#fff}
+.rolebar{margin:18px 0 4px;border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;border:1px solid}
+.rolebar.st{background:var(--teal-wash);border-color:#BFE0DD;color:var(--teal-ink)}
+.rolebar.fa{background:var(--amber-wash);border-color:var(--amber-line);color:var(--amber-ink)}
+.rolebar .tag{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:6px;white-space:nowrap;margin-top:1px}
+.rolebar.st .tag{background:var(--teal);color:#fff}.rolebar.fa .tag{background:var(--amber);color:#fff}
+.rolebar p{margin:0;font-size:13.5px;line-height:1.45}.rolebar b{font-weight:600}
+.hero{padding:24px 2px 4px}
+.hero .eyebrow{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal-ink)}
+.hero h1{font-size:clamp(26px,5.5vw,40px);font-weight:700;line-height:1.03;margin:8px 0 6px}
+.hero .sub{color:var(--muted);max-width:54ch;font-size:15px}
+
+/* journey stepper */
+.journey{margin:22px 0 6px}
+.jscroll{display:flex;gap:0;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:4px 2px 10px;scroll-snap-type:x proximity}
+.step{scroll-snap-align:start;flex:1 0 auto;min-width:120px;background:var(--panel);border:1px solid var(--line);
+  border-radius:14px;padding:13px 14px;cursor:pointer;transition:.15s;position:relative;margin-right:8px}
+.step:last-child{margin-right:0}
+.step:hover{border-color:var(--teal);transform:translateY(-1px)}
+.step[aria-selected=true]{border-color:var(--teal);background:linear-gradient(180deg,var(--teal-wash),#fff);box-shadow:var(--shadow)}
+.step .ph{display:flex;align-items:center;gap:8px}
+.step .ico{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:14px;background:var(--paper);border:1px solid var(--line-strong);flex:none}
+.step[aria-selected=true] .ico{background:var(--teal);border-color:var(--teal);color:#fff}
+.step .n{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700;font-size:10px;color:var(--faint);letter-spacing:.08em}
+.step h4{font-size:13.5px;margin-top:7px;color:var(--ink)}
+.step .dt{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* group finder */
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 12px;align-items:flex-end}
+.field label{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:0 0 5px 2px;font-weight:600}
+select,input[type=text]{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:14px;color:var(--ink);background:var(--panel);border:1px solid var(--line-strong);border-radius:10px;padding:9px 12px;outline:none}
+input[type=text]{min-width:200px}
+select:focus,input:focus{border-color:var(--teal);box-shadow:0 0 0 3px var(--teal-wash)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.gchip{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700;font-size:13px;border:1px solid var(--line-strong);background:var(--panel);color:var(--ink-soft);border-radius:9px;padding:6px 11px;cursor:pointer;transition:.12s}
+.gchip:hover{border-color:var(--teal)}.gchip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+.gcard{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.gcard-head{display:flex;gap:16px;align-items:center;padding:18px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.gnum{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700;background:var(--teal-wash);border:1px solid #BFE0DD;border-radius:12px;padding:9px 13px;line-height:1;display:flex;flex-direction:column;gap:3px;align-items:center;color:var(--teal-ink)}
+.gnum small{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:600;font-size:9px;letter-spacing:.1em;opacity:.75}.gnum b{font-size:22px}
+.gcard-head .meta{flex:1;min-width:160px}.gcard-head h2{font-size:19px}
+.gcard-head .fac{font-size:13px;color:var(--muted);margin-top:3px}.gcard-head .fac b{color:var(--ink-soft);font-weight:600}
+.mlist{list-style:none;margin:0;padding:6px}
+.mrow{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px}
+.mrow+.mrow{border-top:1px solid var(--line)}.mrow:hover{background:#F7F9FB}
+.mrow.you{background:var(--teal-wash)}
+.mrow .who{flex:1;min-width:0}
+.mrow .nm{font-weight:550;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrow .nm .youtag{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:.08em;background:var(--teal);color:#fff;padding:2px 6px;border-radius:5px;margin-left:7px;vertical-align:middle}
+.mrow .aff{font-size:12px;color:var(--muted);margin-top:1px}
+.uchip{font-weight:600;color:var(--ink-soft)}
+.cdot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.roompill{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700;font-size:11px;color:var(--ink-soft);background:var(--paper);border:1px solid var(--line-strong);border-radius:7px;padding:4px 8px;white-space:nowrap}
+.roompill small{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:600;color:var(--faint);font-size:9px}
+
+/* phase panels */
+.phases{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+.phase{background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;scroll-margin-top:80px}
+.phase.dim{opacity:.72}
+.phase-h{display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:1px solid var(--line)}
+.phase-h .ico{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-size:17px;background:var(--teal-wash);border:1px solid #BFE0DD;flex:none}
+.phase-h .tx{flex:1;min-width:0}
+.phase-h h3{font-size:16px}
+.phase-h .dt{font-size:12px;color:var(--muted);margin-top:1px}
+.phase-h .n{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700;font-size:11px;color:var(--faint)}
+.phase-b{padding:15px 18px;font-size:14px;color:var(--ink-soft)}
+.phase-b p{margin:0 0 12px}
+.ctas{display:flex;gap:9px;flex-wrap:wrap}
+.cta{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:600;font-size:13.5px;color:#fff;background:var(--teal);border:0;border-radius:10px;padding:10px 15px;cursor:pointer;display:inline-flex;gap:8px;align-items:center;text-decoration:none}
+.cta:hover{background:var(--teal-ink)}
+.cta.ghost{background:var(--panel);color:var(--teal-ink);border:1px solid var(--line-strong)}
+.cta.ghost:hover{border-color:var(--teal);background:var(--teal-wash)}
+.cta.amber{background:var(--amber)}.cta.amber:hover{background:var(--amber-ink)}
+.pending{position:relative}
+.pending::after{content:'○ link set per group';position:absolute;left:2px;top:calc(100% + 4px);font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:500;font-size:10px;color:var(--faint);white-space:nowrap}
+.ctas.haspending{margin-bottom:16px}
+.mini{font-size:12.5px;color:var(--muted);margin-top:10px}
+.tplnote{margin-top:11px;font-size:12.5px;line-height:1.5;color:#8a5a12;background:#FFF6E6;border:1px solid #F0D9A2;border-left:3px solid var(--amber,#D49E3E);border-radius:10px;padding:9px 12px}
+.mini b{color:var(--ink-soft)}
+
+/* confidential */
+.confid{margin-top:8px;border:1px solid var(--amber-line);border-radius:18px;background:linear-gradient(180deg,var(--amber-wash),#fff 120px);overflow:hidden;box-shadow:var(--shadow)}
+.confid-head{padding:16px 20px;border-bottom:1px solid var(--amber-line);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.confid-head h3{font-size:16px;color:var(--amber-ink)}.confid-head .note{font-size:12px;color:var(--amber);margin-left:auto}
+.fafilters{display:flex;gap:10px;flex-wrap:wrap;padding:14px 20px;border-bottom:1px solid var(--amber-line)}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;min-width:820px;font-size:13px}
+thead th{position:sticky;top:0;background:#fff;text-align:left;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:600;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--line-strong);white-space:nowrap}
+tbody td{padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap;color:var(--ink-soft)}
+tbody tr:hover{background:#FFFBF2}
+td.name{font-weight:550;color:var(--ink)}td.grp{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700;color:var(--ink)}
+.cefr{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700;font-size:11px;padding:3px 7px;border-radius:6px;border:1px solid var(--amber-line);background:var(--amber-wash);color:var(--amber-ink)}
+.cefr.c1,.cefr.c2{background:#F3D9A6;border-color:#DFB260}
+.att{font-size:11px;font-weight:600;padding:2px 7px;border-radius:20px}
+.att.ok{background:var(--teal-wash);color:var(--teal-ink)}.att.q{background:#FBE1DE;color:#A2412F}
+.conf{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:var(--muted)}
+.dist{padding:16px 20px;border-bottom:1px solid var(--amber-line)}
+.dist h4{margin:0 0 10px;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--amber-ink)}
+.distbar{display:flex;height:26px;border-radius:8px;overflow:hidden;border:1px solid var(--amber-line)}
+.distbar span{display:flex;align-items:center;justify-content:center;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-weight:700;font-size:11px;color:#5a4413}
+.leg{display:flex;gap:14px;flex-wrap:wrap;margin-top:9px;font-size:11px;color:var(--muted)}
+.leg i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:middle}
+.foot{margin-top:30px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:var(--faint);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-weight:600;font-size:11px;letter-spacing:.05em;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:4px 10px;color:var(--muted)}
+.hide{display:none!important}
+@media(max-width:560px){.gcard-head{padding:15px}.step{min-width:140px}}
+</style>
+</head>
+<body>
+<div class="top"><div class="top-in">
+  <div class="brand">OISC<span class="dot">.</span> <small>Participant Portal</small></div>
+  <div class="spacer"></div>
+  <div class="roleswitch" role="group" aria-label="View as">
+    <button class="st" id="btnSt" aria-pressed="true" onclick="setRole('student')"><span>&#9679;</span>Student</button>
+    <button class="fa" id="btnFa" aria-pressed="false" onclick="setRole('fa')"><span>&#128274;</span>Faculty Advisor</button>
+  </div>
+</div></div>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="eyebrow">2026 · 11 Institutions · 6 Countries</div>
+    <h1>Your conference,<br>start to finish.</h1>
+    <p class="sub">One place for every step — from your first hello on Padlet to your paper in the OISC Journal.</p>
+  </div>
+
+  <div class="rolebar st" id="rolebar"></div>
+
+  <!-- STUDENT -->
+  <div id="studentView">
+    <div class="journey">
+      <div class="jscroll" id="stepper"></div>
+    </div>
+
+    <div class="controls">
+      <div class="field"><label>Search your name</label>
+        <input type="text" id="nameSearch" placeholder="Type your name…" oninput="onSearch(this.value)"></div>
+      <div class="field" style="flex:1"><label>Or pick your Day 1 group</label>
+        <div class="chips" id="groupChips"></div></div>
+    </div>
+
+    <div id="groupCard"></div>
+    <div class="phases" id="phases"></div>
+  </div>
+
+  <!-- FA -->
+  <div id="faView" class="hide">
+    <div class="confid">
+      <div class="confid-head"><span style="font-size:15px">&#128274;</span>
+        <h3>Faculty Advisor View — Confidential</h3>
+        <span class="note">CEFR · confidence · attendance · student IDs — never shown to students</span></div>
+      <div class="dist"><h4 id="distTitle">CEFR balance</h4>
+        <div class="distbar" id="distBar"></div><div class="leg" id="distLeg"></div></div>
+      <div class="fafilters">
+        <div class="field"><label>Group</label><select id="faGroup" onchange="renderFA()"><option value="">All groups</option></select></div>
+        <div class="field"><label>Institution</label><select id="faUni" onchange="renderFA()"><option value="">All institutions</option></select></div>
+        <div class="field"><label>FA supporter</label><select id="faSup" onchange="renderFA()"><option value="">All FAs</option></select></div>
+        <div class="field"><label>Search</label><input type="text" id="faSearch" placeholder="Name…" oninput="renderFA()"></div>
+      </div>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Name</th><th>Grp</th><th>Institution</th><th>Country</th><th>Yr</th><th>CEFR</th><th>Speak</th><th>Listen</th><th>Att</th><th>Facilitator</th><th>Rm</th><th>FA</th></tr></thead>
+        <tbody id="faBody"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="foot"><span class="pill">Prototype v0.2</span>
+    <span>Sample data = OISC 2025 roster · Padlet / Zoom / group-channel / Journal links are placeholders, wired per group from the Assignments sheet</span></div>
+</div>
+
+<script>
+const DATA = {"participants":[{"name":"Atsushi Sawaki","att":"Okay","uni":"AIT","uniFull":"Aichi Institute of Technology","country":"Japan","group":1,"year":"1st","cefr":"A2","fac":"Aratsu Koharu","facUni":"Aichi Institute of Technology","room":1,"sup":"Keiji"},{"name":"Yuzuha HIROKAWA","att":"Okay","uni":"DWC","uniFull":"Doshisha Women's College of Liberal Arts","country":"Japan","group":1,"year":"3rd","cefr":"B1","fac":"","facUni":"","room":2,"sup":""},{"name":"Rts. Alfira Khairunnisa","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":1,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":3,"sup":""},{"name":"Riana Gontscharov","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":1,"year":"2nd","cefr":"C1","fac":"","facUni":"","room":4,"sup":""},{"name":"Oleksiy","att":"Okay","uni":"UKCU","uniFull":"Ukrainian Catholic University","country":"Ukraine","group":1,"year":"2nd","cefr":"B1","fac":"","facUni":"","room":5,"sup":""},{"name":"JANUS PAULO P GOMEZ","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":1,"year":"3rd","cefr":"C2","fac":"","facUni":"","room":16,"sup":""},{"name":"Jerome Senido","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":1,"year":"3rd","cefr":"B1","fac":"","facUni":"","room":17,"sup":""},{"name":"Janin Dietsche","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":2,"year":"2nd","cefr":"B2","fac":"Ai Shishido","facUni":"Bunkyo University","room":6,"sup":"Yuko"},{"name":"Airi Matsumoto","att":"Okay","uni":"OSU","uniFull":"Osaka Seikei University","country":"Japan","group":2,"year":"3rd","cefr":"A1","fac":"","facUni":"","room":3,"sup":""},{"name":"Quaneisha Eka Ramdhani","att":"Okay","uni":"SMAN15","uniFull":"SMAN 15 Bandung High School","country":"Indonesia","group":2,"year":"1st","cefr":"A2","fac":"","facUni":"","room":10,"sup":""},{"name":"Sofia-Iryna","att":"Okay","uni":"UKCU","uniFull":"Ukrainian Catholic University","country":"Ukraine","group":2,"year":"2nd","cefr":"B1","fac":"","facUni":"","room":7,"sup":""},{"name":"Aethan Seth A. Operana","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":2,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":18,"sup":""},{"name":"Tapac, Marianne S.","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":2,"year":"3rd","cefr":"B1","fac":"","facUni":"","room":20,"sup":""},{"name":"Maki Koizumi","att":"Okay","uni":"DWC","uniFull":"Doshisha Women's College of Liberal Arts","country":"Japan","group":3,"year":"3rd","cefr":"B1","fac":"sigongjiang","facUni":"Bunkyo University","room":4,"sup":"Yuko"},{"name":"Azka Azkia Tawkal","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":3,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":2,"sup":""},{"name":"Lena","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":3,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":8,"sup":""},{"name":"Mei Akaso","att":"Okay","uni":"OSU","uniFull":"Osaka Seikei University","country":"Japan","group":3,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":5,"sup":""},{"name":"Naisa Kansya Ghaisani Aviantoro","att":"Okay","uni":"SMAN15","uniFull":"SMAN 15 Bandung High School","country":"Indonesia","group":3,"year":"1st","cefr":"A2","fac":"","facUni":"","room":6,"sup":""},{"name":"Angela Cacho","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":3,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":18,"sup":""},{"name":"Miracle Luz Alcantara","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":3,"year":"4th","cefr":"B2","fac":"","facUni":"","room":1,"sup":""},{"name":"Choshi Mao","att":"Okay","uni":"DWC","uniFull":"Doshisha Women's College of Liberal Arts","country":"Japan","group":4,"year":"3rd","cefr":"B1","fac":"Mizuki Sakamoto","facUni":"Doshisha Women's College of Liberal Arts","room":6,"sup":"Maha"},{"name":"Siti Nurgina","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":4,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":7,"sup":""},{"name":"Henry","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":4,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":9,"sup":""},{"name":"Yuta Takatani","att":"Okay","uni":"OSU","uniFull":"Osaka Seikei University","country":"Japan","group":4,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":4,"sup":""},{"name":"Geo Ramadan Anwari","att":"??","uni":"SMAN15","uniFull":"SMAN 15 Bandung High School","country":"Indonesia","group":4,"year":"2nd","cefr":"A2","fac":"","facUni":"","room":8,"sup":""},{"name":"ANGEL- ANN M. PARAAN","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":4,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":2,"sup":""},{"name":"Ma. Cristina E. Macapulay","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":4,"year":"1st","cefr":"B1","fac":"","facUni":"","room":3,"sup":""},{"name":"An Yamada","att":"Okay","uni":"DWC","uniFull":"Doshisha Women's College of Liberal Arts","country":"Japan","group":5,"year":"3rd","cefr":"B1","fac":"LEE AEGWI","facUni":"Doshisha Women's College of Liberal Arts","room":8,"sup":"(Maha)"},{"name":"Fajri Putra Rudi Sukmawan","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":5,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":9,"sup":""},{"name":"Marlene Wallussek","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":5,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":10,"sup":""},{"name":"Amira Mawla Nafiza Mulyono","att":"Okay","uni":"SMAN15","uniFull":"SMAN 15 Bandung High School","country":"Indonesia","group":5,"year":"1st","cefr":"A2","fac":"","facUni":"","room":12,"sup":""},{"name":"Lida Chuyeva","att":"Okay","uni":"UKCU","uniFull":"Ukrainian Catholic University","country":"Ukraine","group":5,"year":"2nd","cefr":"B2","fac":"","facUni":"","room":11,"sup":""},{"name":"Jovelyn Soriano","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":5,"year":"3rd","cefr":"C2","fac":"","facUni":"","room":4,"sup":""},{"name":"Raisha Mutia","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":6,"year":"3rd","cefr":"B2","fac":"Reiha Washino","facUni":"Doshisha Women's College of Liberal Arts","room":11,"sup":"(Maha)"},{"name":"Emilio Schwarz","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":6,"year":"2nd","cefr":"C1","fac":"","facUni":"","room":12,"sup":""},{"name":"Samantha Nicole Gonzales","att":"??","uni":"SBU","uniFull":"San Beda University","country":"Philippines","group":6,"year":"4th","cefr":"A1","fac":"","facUni":"","room":16,"sup":""},{"name":"Annisa Larasati Putri Dewayanti","att":"Okay","uni":"SMAN15","uniFull":"SMAN 15 Bandung High School","country":"Indonesia","group":6,"year":"1st","cefr":"A2","fac":"","facUni":"","room":13,"sup":""},{"name":"Rica Joy F. Casilang","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":6,"year":"3rd","cefr":"C1","fac":"","facUni":"","room":5,"sup":""},{"name":"Atsuki Uehara","att":"Okay","uni":"BU","uniFull":"Bunkyo University","country":"Japan","group":7,"year":"3rd","cefr":"A2","fac":"Chihiro Ohata","facUni":"Konan University","room":9,"sup":"Brent"},{"name":"Fuka Onishi","att":"Okay","uni":"DWC","uniFull":"Doshisha Women's College of Liberal Arts","country":"Japan","group":7,"year":"3rd","cefr":"B1","fac":"","facUni":"","room":10,"sup":""},{"name":"Esya Fhatya Zahrah","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":7,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":12,"sup":""},{"name":"Alina Anefiyeva","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":7,"year":"1st","cefr":"B1","fac":"","facUni":"","room":13,"sup":""},{"name":"Kasten Cheska M. Hernandez","att":"Okay","uni":"SBU","uniFull":"San Beda University","country":"Philippines","group":7,"year":"4th","cefr":"B1","fac":"","facUni":"","room":17,"sup":""},{"name":"Oksana","att":"Okay","uni":"UKCU","uniFull":"Ukrainian Catholic University","country":"Ukraine","group":7,"year":"1st","cefr":"B1","fac":"","facUni":"","room":14,"sup":""},{"name":"Aiza May Cabontocan","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":7,"year":"3rd","cefr":"B1","fac":"","facUni":"","room":6,"sup":""},{"name":"Yuhi Hirota","att":"Okay","uni":"BU","uniFull":"Bunkyo University","country":"Japan","group":8,"year":"3rd","cefr":"B2","fac":"Paula Charlotte Bachmann","facUni":"Mittweida University of Applied Sciences","room":11,"sup":"Kristin"},{"name":"Suzuka Yasumura","att":"Okay","uni":"DWC","uniFull":"Doshisha Women's College of Liberal Arts","country":"Japan","group":8,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":12,"sup":""},{"name":"Nadya Eka Aprilia","att":"??","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":8,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":14,"sup":""},{"name":"Emely Schmidt","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":8,"year":"2nd","cefr":"B2","fac":"","facUni":"","room":15,"sup":""},{"name":"Carl Jefferson P. Arago","att":"Okay","uni":"SBU","uniFull":"San Beda University","country":"Philippines","group":8,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":18,"sup":""},{"name":"Olena Stefanovych","att":"Okay","uni":"UKCU","uniFull":"Ukrainian Catholic University","country":"Ukraine","group":8,"year":"1st","cefr":"B2","fac":"","facUni":"","room":20,"sup":""},{"name":"Roxan Bustillo","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":8,"year":"3rd","cefr":"A1","fac":"","facUni":"","room":7,"sup":""},{"name":"Ito Ann","att":"Okay","uni":"BU","uniFull":"Bunkyo University","country":"Japan","group":9,"year":"3rd","cefr":"B1","fac":"Lilly Pilz","facUni":"Mittweida University of Applied Sciences","room":20,"sup":"Kristin"},{"name":"Esyliva Maghfira","att":"??","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":9,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":15,"sup":""},{"name":"Florentine Muller","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":9,"year":"2nd","cefr":"B2","fac":"","facUni":"","room":16,"sup":""},{"name":"Angel Raheema Edding","att":"Okay","uni":"SBU","uniFull":"San Beda University","country":"Philippines","group":9,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":19,"sup":""},{"name":"Jana Mae Quilo","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":9,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":8,"sup":""},{"name":"Kurt Andrei C. Lagera","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":9,"year":"3rd","cefr":"C1","fac":"","facUni":"","room":9,"sup":""},{"name":"Miki Nakagoshi","att":"Okay","uni":"DWC","uniFull":"Doshisha Women's College of Liberal Arts","country":"Japan","group":10,"year":"3rd","cefr":"B1","fac":"Anton Endrich","facUni":"Mittweida University of Applied Sciences","room":14,"sup":"Kristin"},{"name":"Artika Shafa Maulanie","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":10,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":19,"sup":""},{"name":"Hannah Lotsch","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":10,"year":"2nd","cefr":"B2","fac":"","facUni":"","room":17,"sup":""},{"name":"Christine Joy Solis","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":10,"year":"3rd","cefr":"C1","fac":"","facUni":"","room":12,"sup":""},{"name":"Jazel Ann L.Benal","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":10,"year":"3rd","cefr":"C2","fac":"","facUni":"","room":10,"sup":""},{"name":"Shiela Jean C. Basilio","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":10,"year":"3rd","cefr":"C1","fac":"","facUni":"","room":11,"sup":""},{"name":"Mayume Kinoshita","att":"Okay","uni":"DWC","uniFull":"Doshisha Women's College of Liberal Arts","country":"Japan","group":11,"year":"3rd","cefr":"B1","fac":"Shino Nishida","facUni":"Osaka Seikei University","room":15,"sup":"Emi"},{"name":"Bernadetha Devina Dwi Sumarta","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":11,"year":"3rd","cefr":"C1","fac":"","facUni":"","room":10,"sup":""},{"name":"Emily Busse","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":11,"year":"2nd","cefr":"B2","fac":"","facUni":"","room":18,"sup":""},{"name":"Tiffany","att":"Okay","uni":"OSU","uniFull":"Osaka Seikei University","country":"Japan","group":11,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":17,"sup":""},{"name":"Olesia","att":"Okay","uni":"UKCU","uniFull":"Ukrainian Catholic University","country":"Ukraine","group":11,"year":"2nd","cefr":"B2","fac":"","facUni":"","room":19,"sup":""},{"name":"Joana Mae","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":11,"year":"3rd","cefr":"A1","fac":"","facUni":"","room":13,"sup":""},{"name":"MELVIN ALVAREZ","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":11,"year":"3rd","cefr":"B1","fac":"","facUni":"","room":14,"sup":""},{"name":"Adinda Fatimah","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":12,"year":"3rd","cefr":"B2","fac":"Sakura Fukaya","facUni":"Osaka Seikei University","room":18,"sup":"Emi"},{"name":"Liv Lilou Camille Lecoeur","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":12,"year":"2nd","cefr":"B2","fac":"","facUni":"","room":20,"sup":""},{"name":"Yusuke Inui","att":"Okay","uni":"OSU","uniFull":"Osaka Seikei University","country":"Japan","group":12,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":16,"sup":""},{"name":"Anne Marie Evangelista","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":12,"year":"3rd","cefr":"C2","fac":"","facUni":"","room":15,"sup":""},{"name":"Cris Jan Flores","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":12,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":19,"sup":""},{"name":"Nicole Kaye Morales","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":12,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":17,"sup":""},{"name":"Sakura Fujimoto","att":"Okay","uni":"DWC","uniFull":"Doshisha Women's College of Liberal Arts","country":"Japan","group":13,"year":"3rd","cefr":"B2","fac":"TRAN HONG TU","facUni":"Osaka Seikei University","room":18,"sup":"Emi"},{"name":"Salwa Mutiara Dineka","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":13,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":16,"sup":""},{"name":"Ako Kobayashi","att":"Okay","uni":"KU","uniFull":"Konan University","country":"Japan","group":13,"year":"2nd","cefr":"B1","fac":"","facUni":"","room":13,"sup":""},{"name":"Aaron Berg","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":13,"year":"2nd","cefr":"B2","fac":"","facUni":"","room":1,"sup":""},{"name":"Jeanne Dacayo","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":13,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":19,"sup":""},{"name":"MJ R. Querido","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":13,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":20,"sup":""},{"name":"Mio Ueda","att":"Okay","uni":"DWC","uniFull":"Doshisha Women's College of Liberal Arts","country":"Japan","group":14,"year":"3rd","cefr":"B2","fac":"Solomiia Zakordonets","facUni":"Ukrainian Catholic University","room":19,"sup":"Oksana"},{"name":"Hairawati Salamatun Syadiah","att":"??","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":14,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":20,"sup":""},{"name":"Paul Potz","att":"Okay","uni":"MUAS","uniFull":"Mittweida University of Applied Sciences","country":"Germany","group":14,"year":"2nd","cefr":"B2","fac":"","facUni":"","room":2,"sup":""},{"name":"MAHO MORIUCHI","att":"Okay","uni":"OSU","uniFull":"Osaka Seikei University","country":"Japan","group":14,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":1,"sup":""},{"name":"Bohdana","att":"Okay","uni":"UKCU","uniFull":"Ukrainian Catholic University","country":"Ukraine","group":14,"year":"2nd","cefr":"B1","fac":"","facUni":"","room":3,"sup":""},{"name":"Karen Lei Villar","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":14,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":16,"sup":""},{"name":"Mikhaella Ceralde","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":14,"year":"3rd","cefr":"C1","fac":"","facUni":"","room":14,"sup":""},{"name":"Msy Ashazi Fuleni","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":15,"year":"4th","cefr":"B2","fac":"Hanna Kitsela","facUni":"Ukrainian Catholic University","room":5,"sup":"Oksana"},{"name":"Mizuho Maeda","att":"Okay","uni":"KU","uniFull":"Konan University","country":"Japan","group":15,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":2,"sup":""},{"name":"Mariia Mykhailets","att":"Okay","uni":"UKCU","uniFull":"Ukrainian Catholic University","country":"Ukraine","group":15,"year":"2nd","cefr":"B1","fac":"","facUni":"","room":4,"sup":""},{"name":"Jastine Joy C. Torio","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":15,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":1,"sup":""},{"name":"JOANA MAE PLAZA","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":15,"year":"3rd","cefr":"A1","fac":"","facUni":"","room":3,"sup":""},{"name":"Maryjoy","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":15,"year":"3rd","cefr":"C2","fac":"","facUni":"","room":20,"sup":""},{"name":"Yuzuki Yamamoto","att":"Okay","uni":"DWC","uniFull":"Doshisha Women's College of Liberal Arts","country":"Japan","group":16,"year":"3rd","cefr":"B1","fac":"Wening Soca","facUni":"UPN Veteran Yogyakarta","room":3,"sup":"Gin Gin"},{"name":"Anindya Pratista","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":16,"year":"4th","cefr":"B2","fac":"","facUni":"","room":4,"sup":""},{"name":"Sae Kuroda","att":"Okay","uni":"OSU","uniFull":"Osaka Seikei University","country":"Japan","group":16,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":7,"sup":""},{"name":"Sonya","att":"Okay","uni":"UKCU","uniFull":"Ukrainian Catholic University","country":"Ukraine","group":16,"year":"2nd","cefr":"B1","fac":"","facUni":"","room":5,"sup":""},{"name":"blesza belle esguerra","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":16,"year":"3rd","cefr":"B1","fac":"","facUni":"","room":15,"sup":""},{"name":"Kyla Sofia Pabalate","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":16,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":6,"sup":""},{"name":"Noguchi Kousei","att":"Okay","uni":"AIT","uniFull":"Aichi Institute of Technology","country":"Japan","group":17,"year":"2nd","cefr":"A2","fac":"Akiya Tanaka","facUni":"Konan University","room":5,"sup":"(Brent)"},{"name":"Siti Hasna Haifa Rochmah Hermawan","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":17,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":8,"sup":""},{"name":"Yuzuki Ichimura","att":"Okay","uni":"OSU","uniFull":"Osaka Seikei University","country":"Japan","group":17,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":6,"sup":""},{"name":"Anastasiia","att":"Okay","uni":"UKCU","uniFull":"Ukrainian Catholic University","country":"Ukraine","group":17,"year":"2nd","cefr":"B1","fac":"","facUni":"","room":13,"sup":""},{"name":"Chelian Rosario","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":17,"year":"3rd","cefr":"C1","fac":"","facUni":"","room":7,"sup":""},{"name":"Glyssa Marie U. Quiambao","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":17,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":2,"sup":""},{"name":"Aria Yasui","att":"Okay","uni":"DWC","uniFull":"Doshisha Women's College of Liberal Arts","country":"Japan","group":18,"year":"3rd","cefr":"B1","fac":"Haruto Ogata","facUni":"Konan University","room":7,"sup":"Faliq"},{"name":"Revi reviani","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":18,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":10,"sup":""},{"name":"Miyu Terao","att":"Okay","uni":"OSU","uniFull":"Osaka Seikei University","country":"Japan","group":18,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":8,"sup":""},{"name":"Diana","att":"Okay","uni":"UKCU","uniFull":"Ukrainian Catholic University","country":"Ukraine","group":18,"year":"2nd","cefr":"B2","fac":"","facUni":"","room":6,"sup":""},{"name":"Marry Grace D. Cabaya","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":18,"year":"3rd","cefr":"C1","fac":"","facUni":"","room":9,"sup":""},{"name":"SHYRILLE P. YARES","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":18,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":4,"sup":""},{"name":"Sara Kawamura","att":"Okay","uni":"OSU","uniFull":"Osaka Seikei University","country":"Japan","group":19,"year":"3rd","cefr":"A2","fac":"Ryoma Nakamoto","facUni":"Konan University","room":10,"sup":"Faliq"},{"name":"Shimma Ota","att":"Okay","uni":"OSU","uniFull":"Osaka Seikei University","country":"Japan","group":19,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":9,"sup":""},{"name":"Naila Azka Aqila","att":"Okay","uni":"SMAN15","uniFull":"SMAN 15 Bandung High School","country":"Indonesia","group":19,"year":"3rd","cefr":"A2","fac":"","facUni":"","room":17,"sup":""},{"name":"James P. Montemayor","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":19,"year":"3rd","cefr":"B1","fac":"","facUni":"","room":11,"sup":""},{"name":"Mariel Miranda","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":19,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":12,"sup":""},{"name":"Renalyn Garcia","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":19,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":13,"sup":""},{"name":"Nao Uchino","att":"Okay","uni":"AIT","uniFull":"Aichi Institute of Technology","country":"Japan","group":20,"year":"3rd","cefr":"B1","fac":"Sayaka Fujimoto","facUni":"Konan University","room":11,"sup":"Gin Gin"},{"name":"Sae ONO","att":"Okay","uni":"DWC","uniFull":"Doshisha Women's College of Liberal Arts","country":"Japan","group":20,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":12,"sup":""},{"name":"Arina Nafisa Ridwan","att":"Okay","uni":"UPI","uniFull":"Indonesia University of Education","country":"Indonesia","group":20,"year":"3rd","cefr":"B2","fac":"","facUni":"","room":1,"sup":""},{"name":"Kate","att":"Okay","uni":"UKCU","uniFull":"Ukrainian Catholic University","country":"Ukraine","group":20,"year":"1st","cefr":"B1","fac":"","facUni":"","room":19,"sup":""},{"name":"Mary Raine Taloban","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":20,"year":"3rd","cefr":"C2","fac":"","facUni":"","room":14,"sup":""},{"name":"Rhodalyn Doria","att":"??","uni":"URCU","uniFull":"Urdaneta City University","country":"Philippines","group":20,"year":"3rd","cefr":"C1","fac":"","facUni":"","room":15,"sup":""}],"facilitators":{"1":{"name":"Aratsu Koharu","uni":"Aichi Institute of Technology","sup":"Keiji"},"2":{"name":"Ai Shishido","uni":"Bunkyo University","sup":"Yuko"},"3":{"name":"sigongjiang","uni":"Bunkyo University","sup":"Yuko"},"4":{"name":"Mizuki Sakamoto","uni":"Doshisha Women's College of Liberal Arts","sup":"Maha"},"5":{"name":"LEE AEGWI","uni":"Doshisha Women's College of Liberal Arts","sup":"(Maha)"},"6":{"name":"Reiha Washino","uni":"Doshisha Women's College of Liberal Arts","sup":"(Maha)"},"7":{"name":"Chihiro Ohata","uni":"Konan University","sup":"Brent"},"8":{"name":"Paula Charlotte Bachmann","uni":"Mittweida University of Applied Sciences","sup":"Kristin"},"9":{"name":"Lilly Pilz","uni":"Mittweida University of Applied Sciences","sup":"Kristin"},"10":{"name":"Anton Endrich","uni":"Mittweida University of Applied Sciences","sup":"Kristin"},"11":{"name":"Shino Nishida","uni":"Osaka Seikei University","sup":"Emi"},"12":{"name":"Sakura Fukaya","uni":"Osaka Seikei University","sup":"Emi"},"13":{"name":"TRAN HONG TU","uni":"Osaka Seikei University","sup":"Emi"},"14":{"name":"Solomiia Zakordonets","uni":"Ukrainian Catholic University","sup":"Oksana"},"15":{"name":"Hanna Kitsela","uni":"Ukrainian Catholic University","sup":"Oksana"},"16":{"name":"Wening Soca","uni":"UPN Veteran Yogyakarta","sup":"Gin Gin"},"17":{"name":"Akiya Tanaka","uni":"Konan University","sup":"(Brent)"},"18":{"name":"Haruto Ogata","uni":"Konan University","sup":"Faliq"},"19":{"name":"Ryoma Nakamoto","uni":"Konan University","sup":"Faliq"},"20":{"name":"Sayaka Fujimoto","uni":"Konan University","sup":"Gin Gin"}},"unis":{"AIT":"Aichi Institute of Technology","DWC":"Doshisha Women's College of Liberal Arts","UPI":"Indonesia University of Education","MUAS":"Mittweida University of Applied Sciences","UKCU":"Ukrainian Catholic University","URCU":"Urdaneta City University","OSU":"Osaka Seikei University","SMAN15":"SMAN 15 Bandung High School","SBU":"San Beda University","BU":"Bunkyo University","KU":"Konan University"}};
+const COUNTRY_COLOR={Japan:'#C64B4B',Indonesia:'#E08A2E',Germany:'#3F4A5A',Philippines:'#1F8A76',Ukraine:'#2E6FB0',Taiwan:'#7A4FB0'};
+const CEFR_COLOR={A1:'#F6E7C6',A2:'#F0D9A2',B1:'#E9C87E',B2:'#E0B45E',C1:'#D49E3E',C2:'#C4862A'};
+const CEFR_ORDER=['A1','A2','B1','B2','C1','C2'];
+const PHASES=[
+ {n:'STEP 1',ico:'\ud83d\udc4b',t:'Padlet Intro',dt:'Oct 15\u201331'},
+ {n:'STEP 2',ico:'\ud83c\udf10',t:'Day 1 \u00b7 Kick-off',dt:'Nov 7'},
+ {n:'STEP 3',ico:'\ud83d\udcac',t:'Collaborate & Draft',dt:'Nov 7\u2013Nov 28'},
+ {n:'STEP 4',ico:'\ud83c\udfa4',t:'Day 2 \u00b7 Present',dt:'Dec 5'},
+ {n:'STEP 5',ico:'\u270d\ufe0f',t:'Final Paper',dt:'Dec 5\u201320'},
+ {n:'STEP 6',ico:'\ud83d\udcd6',t:'OISC Journal',dt:'Jan 2027 \u2192'},
+];
+let role='student',selectedGroup=1,selectedName=null,activePhase=0;
+const P=DATA.participants,F=DATA.facilitators;
+const groups=[...new Set(P.map(p=>p.group))].sort((a,b)=>a-b);
+const unis=DATA.unis;
+
+function setRole(r){role=r;
+  document.getElementById('btnSt').setAttribute('aria-pressed',r==='student');
+  document.getElementById('btnFa').setAttribute('aria-pressed',r==='fa');
+  document.getElementById('studentView').classList.remove('hide');
+  document.getElementById('faView').classList.toggle('hide',r!=='fa');
+  const rb=document.getElementById('rolebar');
+  if(r==='student'){rb.className='rolebar st';
+    rb.innerHTML='<span class="tag">Student</span><p>Follow the 5 steps below. Each step gives you the link you need — Padlet, Zoom, your group chat, and later the Journal. <b>Your CEFR, confidence scores and student ID are never shown here.</b></p>';
+  }else{rb.className='rolebar fa';
+    rb.innerHTML='<span class="tag">Faculty Advisor</span><p>You see the <b>same journey page students see</b> (above) — every group, every link — <b>plus</b> the confidential intake data below: CEFR, English-confidence, attendance, student ID.</p>';}
+}
+
+function cdot(c){return '<span class="cdot" style="background:'+(COUNTRY_COLOR[c]||'#999')+'"></span>';}
+
+// stepper
+function renderStepper(){
+  document.getElementById('stepper').innerHTML=PHASES.map((p,i)=>
+   '<div class="step" role="tab" aria-selected="'+(i===activePhase)+'" onclick="gotoPhase('+i+')">'+
+     '<div class="ph"><div class="ico">'+p.ico+'</div><div class="n">'+p.n+'</div></div>'+
+     '<h4>'+p.t+'</h4><div class="dt">'+p.dt+'</div></div>').join('');
+}
+function gotoPhase(i){activePhase=i;renderStepper();
+  const el=document.getElementById('phase'+i);
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// chips
+document.getElementById('groupChips').innerHTML=groups.map(g=>
+ '<button class="gchip" data-g="'+g+'" aria-pressed="'+(g===selectedGroup)+'" onclick="pickGroup('+g+')">'+g+'</button>').join('');
+function pickGroup(g){selectedGroup=g;selectedName=null;document.getElementById('nameSearch').value='';
+  document.querySelectorAll('.gchip').forEach(c=>c.setAttribute('aria-pressed',+c.dataset.g===g));
+  renderGroup();renderPhases();}
+function onSearch(q){q=q.trim().toLowerCase();if(!q){selectedName=null;renderGroup();renderPhases();return;}
+  const hit=P.find(p=>p.name.toLowerCase().includes(q));
+  if(hit){selectedGroup=hit.group;selectedName=hit.name;
+    document.querySelectorAll('.gchip').forEach(c=>c.setAttribute('aria-pressed',+c.dataset.g===hit.group));
+    renderGroup();renderPhases();}}
+
+function renderGroup(){
+  const g=selectedGroup,mem=P.filter(p=>p.group===g),fac=F[g]||{};
+  const rows=mem.map(p=>{
+    const you=selectedName&&p.name===selectedName;
+    return '<li class="mrow'+(you?' you':'')+'">'+cdot(p.country)+
+      '<div class="who"><div class="nm">'+p.name+(you?'<span class="youtag">YOU</span>':'')+'</div>'+
+      '<div class="aff"><span class="uchip">'+p.uni+'</span> · '+p.country+'</div></div>'+
+      (p.room?'<span class="roompill"><small>DAY 2 </small>Rm '+p.room+'</span>':'')+'</li>';}).join('');
+  document.getElementById('groupCard').innerHTML=
+   '<div class="gcard"><div class="gcard-head">'+
+     '<div class="gnum"><small>DAY 1</small><b>'+g+'</b></div>'+
+     '<div class="meta"><h2>Group '+g+'</h2>'+
+       '<div class="fac">Facilitator: <b>'+(fac.name||'TBA')+'</b>'+(fac.uni?' · '+fac.uni:'')+'</div></div>'+
+   '</div><ul class="mlist">'+rows+'</ul></div>';
+}
+
+function phaseCard(i,body){const p=PHASES[i];
+  return '<div class="phase" id="phase'+i+'"><div class="phase-h">'+
+    '<div class="ico">'+p.ico+'</div><div class="tx"><div class="n">'+p.n+'</div>'+
+    '<h3>'+p.t+'</h3><div class="dt">'+p.dt+'</div></div></div>'+
+    '<div class="phase-b">'+body+'</div></div>';}
+
+function renderPhases(){
+  const g=selectedGroup,fac=F[g]||{};
+  const you=selectedName?P.find(p=>p.name===selectedName):null;
+  const roomTxt=you&&you.room?('<b>Room '+you.room+'</b>'):'your assigned room';
+  let h='';
+  h+=phaseCard(0,
+    '<p>Post a short self-introduction video and say hello to students from 6 countries. This is how your group starts to know each other before Day 1.</p>'+
+    '<div class="ctas haspending"><a class="cta pending" href="#" onclick="return false">&#128279; Open Group '+g+' Padlet</a></div>');
+  h+=phaseCard(1,
+    '<p>Meet your group live, break the ice, and choose your research topic together with facilitator <b>'+(fac.name||'TBA')+'</b>.</p>'+
+    '<div class="ctas haspending"><a class="cta pending" href="#" onclick="return false">&#128249; Join Day 1 Zoom</a>'+
+    '<a class="cta ghost" href="#" onclick="return false">Topic worksheet</a></div>'+
+    '<div class="mini">Your Day 1 group: <b>Group '+g+'</b> \u00b7 '+P.filter(p=>p.group===g).length+' members</div>');
+  h+=phaseCard(2,
+    '<p>Between the two days, your group researches a global challenge, builds its slides, and writes a <b>short paper draft</b>. <b>Every group prepares a draft</b> \u2014 aim to have it substantially ready before Day 2. Stay in touch on the platform your group picks (Messenger, WhatsApp, Discord, LINE\u2026).</p>'+
+    '<div class="ctas haspending"><a class="cta pending" href="#" onclick="return false">&#128172; Open Group '+g+' channel</a>'+
+    '<a class="cta ghost pending" href="#" onclick="return false">Paper draft template</a>'+
+    '<a class="cta ghost pending" href="#" onclick="return false">Research resources</a></div>'+
+    '<div class="mini">Short paper draft due: <b>~Dec 3</b>, before Day 2</div>');
+  h+=phaseCard(3,
+    '<p>Present your group\u2019s research and join the discussion, with your draft paper already in hand. Presentations run in Day 2 rooms \u2014 check yours below.</p>'+
+    '<div class="ctas haspending"><a class="cta pending" href="#" onclick="return false">&#128249; Join Day 2 Zoom</a>'+
+    '<a class="cta ghost pending" href="#" onclick="return false">Submit final slides</a></div>'+
+    '<div class="mini">Your Day 2 room: '+roomTxt+(you?'':' <span style="color:var(--faint)">(search your name to see it)</span>')+'</div>');
+  h+=phaseCard(4,
+    '<p>After presenting, <b>every group</b> revises its draft into a <b>final short paper</b> and submits it \u2014 required of all groups, not only those chosen for the Journal. Feedback from Day 2 goes straight into the final version.</p>'+
+    '<div class="ctas haspending"><a class="cta pending" href="#" onclick="return false">&#128228; Submit final paper</a>'+
+    '<a class="cta ghost" href="./OISC_Conference_Paper_Template.docx" download>&#128196; Paper template (.docx)</a>'+
+    '<a class="cta ghost" href="https://docs.google.com/document/d/1FaxdXH4QWxnlqDtr8UXhaumqOb_E1nCp/edit?usp=sharing" target="_blank">&#9729;&#65039; View template (Google Doc)</a>'+
+    '<a class="cta ghost" href="#" onclick="return false">Paper guidelines</a></div>'+
+    '<div class="tplnote">&#128206; The Google Doc opens in <b>view-only</b> mode and includes the formatting-guidance <b>comments</b>. To write your paper, <b>download the .docx</b> (or in Google Docs use <i>File &#8250; Make a copy</i>) and edit your own copy. <b>Please do not request edit access</b> to the shared Doc.</div>'+
+    '<div class="mini">Final paper due: <b>~Dec 20</b> · Use the conference paper template for formatting.</div>');
+  h+=phaseCard(5,
+    '<p>From all the final papers submitted, <b>selected papers are published in the OISC Journal</b>. Writing a paper is for everyone; publication is the highlight for the strongest work.</p>'+
+    '<div class="ctas"><a class="cta amber" href="#" onclick="return false">&#128214; Visit OISC Journal</a>'+
+    '<a class="cta ghost" href="#" onclick="return false">Submission guide</a></div>'+
+    '<div class="mini">Selections announced January 2027.</div>');
+  document.getElementById('phases').innerHTML=h;
+}
+
+// FA
+function buildFA(){const gs=document.getElementById('faGroup');groups.forEach(g=>gs.innerHTML+='<option value="'+g+'">Group '+g+'</option>');
+  const us=document.getElementById('faUni');Object.keys(unis).forEach(u=>us.innerHTML+='<option value="'+u+'">'+u+'</option>');
+  const sups=[...new Set(P.map(p=>p.sup).filter(Boolean).map(s=>s.replace(/[()]/g,'')))].sort();
+  const ss=document.getElementById('faSup');sups.forEach(s=>ss.innerHTML+='<option value="'+s+'">'+s+'</option>');}
+function fakeConf(seed){const v=(seed.length*7)%4;return ['Not at all','A little','Fairly','Very'][v];}
+function renderFA(){
+  const g=document.getElementById('faGroup').value,u=document.getElementById('faUni').value,
+    s=document.getElementById('faSup').value,q=document.getElementById('faSearch').value.trim().toLowerCase();
+  let rows=P.filter(p=>(!g||p.group==+g)&&(!u||p.uni===u)&&(!s||(p.sup&&p.sup.replace(/[()]/g,'')===s))&&(!q||p.name.toLowerCase().includes(q)));
+  document.getElementById('faBody').innerHTML=rows.map(p=>{
+    const att=p.att==='Okay'?'<span class="att ok">present</span>':'<span class="att q">unconf.</span>';
+    return '<tr><td class="name">'+p.name+'</td><td class="grp">'+p.group+'</td><td>'+p.uni+'</td>'+
+      '<td>'+cdot(p.country)+' '+p.country+'</td><td>'+p.year+'</td>'+
+      '<td><span class="cefr '+(p.cefr||'').toLowerCase()+'">'+p.cefr+'</span></td>'+
+      '<td class="conf">'+fakeConf(p.name)+'</td><td class="conf">'+fakeConf(p.uni+p.name)+'</td>'+
+      '<td>'+att+'</td><td>'+(p.fac||'\u2014')+'</td><td class="grp">'+(p.room||'\u2014')+'</td><td class="conf">'+(p.sup||'\u2014')+'</td></tr>';
+  }).join('')||'<tr><td colspan="12" style="text-align:center;color:var(--faint);padding:24px">No matches</td></tr>';
+  const scope=g?rows:P,counts={};CEFR_ORDER.forEach(l=>counts[l]=0);
+  scope.forEach(p=>{if(counts[p.cefr]!==undefined)counts[p.cefr]++});const tot=scope.length||1;
+  document.getElementById('distTitle').textContent=g?('CEFR balance · Group '+g):'CEFR balance · all participants';
+  document.getElementById('distBar').innerHTML=CEFR_ORDER.map(l=>{const pct=counts[l]/tot*100;if(!counts[l])return '';
+    return '<span style="width:'+pct+'%;background:'+CEFR_COLOR[l]+'">'+(pct>9?l:'')+'</span>';}).join('');
+  document.getElementById('distLeg').innerHTML=CEFR_ORDER.map(l=>'<span><i style="background:'+CEFR_COLOR[l]+'"></i>'+l+' · '+counts[l]+'</span>').join('');
+}
+
+setRole('student');renderStepper();renderGroup();renderPhases();buildFA();renderFA();
+</script>
+</body>
+</html>
