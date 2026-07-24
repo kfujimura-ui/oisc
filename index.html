@@ -226,10 +226,10 @@ img { max-width: 100%; }
 
 /* ─── ③ News / Updates ───────────────────────────── */
 #news { background: var(--light); }
-.news-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.news-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; }
 .embed-card {
   background: #fff; border: 1px solid var(--border);
-  border-radius: 12px; padding: 24px; display: flex; flex-direction: column;
+  border-radius: 12px; padding: 24px; display: flex; flex-direction: column; min-width: 0;
   min-height: 320px;
 }
 .embed-head {
@@ -266,6 +266,13 @@ img { max-width: 100%; }
   margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border);
   font-size: 10.5px; color: var(--muted); text-align: center; line-height: 1.5;
 }
+.x-embed, .youtube-embed { width: 100%; min-width: 0; overflow: hidden; }
+.x-embed { flex: 1; min-height: 340px; }
+.x-embed .twitter-tweet,
+.x-embed .twitter-tweet-rendered,
+.x-embed iframe { width: 100% !important; min-width: 0 !important; max-width: 100% !important; margin-left: auto !important; margin-right: auto !important; }
+.youtube-embed { position: relative; flex: none; aspect-ratio: 16 / 9; border-radius: 8px; }
+.youtube-embed iframe { position: absolute; inset: 0; width: 100% !important; height: 100% !important; max-width: 100%; border: 0; border-radius: 8px; display: block; }
 
 /* ─── ④ About ────────────────────────────────────── */
 #about { background: var(--white); }
@@ -443,6 +450,9 @@ footer {
   .journal-coming-body { text-align: center; }
 }
 @media (max-width: 480px) {
+  #news.section { padding-left: 20px; padding-right: 20px; }
+  #news .embed-card { padding: 20px; }
+  #news .x-embed { min-height: 320px; }
   .fa-grid { grid-template-columns: 1fr; }
   .about-stats-grid { grid-template-columns: 1fr 1fr; }
   .hero-tagline { font-size: 21px; }
@@ -691,7 +701,7 @@ footer {
             <span>X (Twitter) Timeline</span>
           </div>
         </div>
-        <div style="flex:1;min-height:340px;overflow:auto;">
+        <div class="x-embed">
           <blockquote class="twitter-tweet" data-dnt="true" data-theme="light">
             <p lang="en" dir="ltr">Made an introduction video for OISC 2026!</p>
             <a href="https://twitter.com/OISC_official/status/2077025354733293616">July 14, 2026</a>
@@ -710,8 +720,8 @@ footer {
             <span>Latest Videos &amp; Presentation Archive</span>
           </div>
         </div>
-        <div style="flex:1;min-height:250px;border-radius:8px;overflow:hidden;">
-          <iframe width="100%" height="260" style="border:0;display:block;border-radius:8px;"
+        <div class="youtube-embed">
+          <iframe
             src="https://www.youtube.com/embed/videoseries?list=PLbAnIjoIe6Cw"
             title="OISC Videos — latest from the channel"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -1063,5 +1073,3 @@ footer {
 </script>
 </body>
 </html>
-
-<!-- GCLI link updated -->
