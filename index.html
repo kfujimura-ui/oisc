@@ -267,10 +267,10 @@ img { max-width: 100%; }
   font-size: 10.5px; color: var(--muted); text-align: center; line-height: 1.5;
 }
 .x-embed, .youtube-embed { width: 100%; min-width: 0; overflow: hidden; }
-.x-embed { flex: 1; min-height: 340px; }
+.x-embed { display: flex; flex: 1; justify-content: center; min-height: 340px; }
 .x-embed .twitter-tweet,
-.x-embed .twitter-tweet-rendered,
-.x-embed iframe { width: 100% !important; min-width: 0 !important; max-width: 100% !important; margin-left: auto !important; margin-right: auto !important; }
+.x-embed .twitter-tweet-rendered { max-width: 100% !important; margin-left: auto !important; margin-right: auto !important; }
+.x-embed iframe { min-width: 0 !important; max-width: 100% !important; margin-left: auto !important; margin-right: auto !important; }
 .youtube-embed { position: relative; flex: none; aspect-ratio: 16 / 9; border-radius: 8px; }
 .youtube-embed iframe { position: absolute; inset: 0; width: 100% !important; height: 100% !important; max-width: 100%; border: 0; border-radius: 8px; display: block; }
 
@@ -1004,6 +1004,16 @@ footer {
   </p>
 </footer>
 
+<script>
+  // X embeds render at the width they receive when the widget loads.
+  // Set that width from the card before loading the third-party widget.
+  const xEmbed = document.querySelector('.x-embed');
+  const xPost = xEmbed?.querySelector('.twitter-tweet');
+  if (xEmbed && xPost) {
+    const xWidth = Math.floor(xEmbed.getBoundingClientRect().width);
+    xPost.setAttribute('data-width', String(Math.max(250, Math.min(550, xWidth))));
+  }
+</script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <script>
   // ── Mobile nav toggle ─────────────────────────────────
