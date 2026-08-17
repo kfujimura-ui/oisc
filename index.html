@@ -313,7 +313,7 @@ img { max-width: 100%; }
 .contact-email { color: var(--gold); font-weight: 600; font-size: 14px; }
 .form-box {
   background: rgba(255,255,255,.055); border: 1px solid rgba(255,255,255,.1);
-  border-radius: 12px; padding: 28px;
+  border-radius: 4px; padding: 28px;
 }
 .frow { margin-bottom: 15px; }
 .frow label {
@@ -325,7 +325,7 @@ img { max-width: 100%; }
 .frow select,
 .frow textarea {
   width: 100%; background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.13); border-radius: 6px;
+  border: 1px solid rgba(255,255,255,.13); border-radius: 2px;
   padding: 10px 13px; font-size: 13.5px; color: #fff;
   font-family: var(--font); outline: none; transition: border-color .2s;
   -webkit-appearance: none;
@@ -339,7 +339,7 @@ img { max-width: 100%; }
 .frow select option { background: var(--navy); }
 .btn-submit {
   width: 100%; background: var(--gold); color: #2a1c05;
-  border: none; border-radius: 6px; padding: 13px;
+  border: none; border-radius: 3px; padding: 13px;
   font-size: 14px; font-weight: 700; cursor: pointer;
   letter-spacing: .03em; transition: background .2s; font-family: var(--font);
 }
@@ -946,21 +946,22 @@ footer {
         <p>Use the form on the right to get in touch. We will respond within a few business days.</p>
       </div>
       <div class="form-box">
+        <form id="contactForm" data-source="OISC">
         <div class="frow">
-          <label>Name</label>
-          <input type="text" placeholder="Your full name">
+          <label for="contactName">Name</label>
+          <input id="contactName" name="name" type="text" placeholder="Your full name" required>
         </div>
         <div class="frow">
-          <label>Email</label>
-          <input type="email" placeholder="your@email.com">
+          <label for="contactEmail">Email</label>
+          <input id="contactEmail" name="email" type="email" placeholder="your@email.com" required>
         </div>
         <div class="frow">
-          <label>Affiliation</label>
-          <input type="text" placeholder="University / Institution name">
+          <label for="contactAffiliation">Affiliation</label>
+          <input id="contactAffiliation" name="affiliation" type="text" placeholder="University / Institution name">
         </div>
         <div class="frow">
-          <label>Inquiry Type</label>
-          <select>
+          <label for="contactTopic">Inquiry Type</label>
+          <select id="contactTopic" name="topic">
             <option value="">Select a topic...</option>
             <option>Participation Inquiry</option>
             <option>Research Collaboration</option>
@@ -969,10 +970,13 @@ footer {
           </select>
         </div>
         <div class="frow">
-          <label>Message</label>
-          <textarea placeholder="Your message..."></textarea>
+          <label for="contactMessage">Message</label>
+          <textarea id="contactMessage" name="message" placeholder="Your message..." required></textarea>
         </div>
-        <button class="btn-submit">Send Message →</button>
+        <input type="text" name="website" autocomplete="off" tabindex="-1" style="position:absolute;left:-9999px" aria-hidden="true">
+        <button class="btn-submit" type="submit">Send Message →</button>
+        <p id="contactStatus" aria-live="polite" style="margin-top:12px;color:rgba(255,255,255,.7);font-size:13px"></p>
+        </form>
       </div>
     </div>
   </div>
@@ -1007,6 +1011,34 @@ footer {
 </footer>
 
 <script>
+  const contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const status = document.getElementById('contactStatus');
+      const button = contactForm.querySelector('button[type="submit"]');
+      const data = Object.fromEntries(new FormData(contactForm).entries());
+      data.source = contactForm.dataset.source || 'OISC';
+      status.textContent = 'Sending...';
+      button.disabled = true;
+      try {
+        const res = await fetch('https://portal.gcli.site/api/contact', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        const out = await res.json().catch(() => ({}));
+        if (!res.ok || !out.ok) throw new Error(out.error || 'send-failed');
+        contactForm.reset();
+        status.textContent = 'Message sent. Thank you.';
+      } catch (error) {
+        status.textContent = 'Could not send the message. Please try again or email the administrator.';
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
   // X embeds render at the width they receive when the widget loads.
   // Set that width from the card before loading the third-party widget.
   const xEmbed = document.querySelector('.x-embed');
