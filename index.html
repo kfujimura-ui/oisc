@@ -138,6 +138,48 @@ img { max-width: 100%; }
 }
 .scroll-line { width: 1px; height: 36px; background: rgba(255,255,255,.18); }
 
+/* ─── Official Video ─────────────────────────────── */
+.official-video { background: var(--light); padding: 76px 40px; }
+.official-video-grid {
+  display: grid; grid-template-columns: minmax(0, .84fr) minmax(0, 1.16fr);
+  align-items: center; gap: 56px;
+}
+.official-video-copy .sec-title { max-width: 450px; margin-bottom: 18px; }
+.official-video-copy p:not(.sec-tag) {
+  max-width: 440px; color: var(--muted); font-size: 16px; line-height: 1.8;
+}
+.official-video-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.official-video-actions .btn-primary { font-size: 13px; padding: 11px 18px; }
+.official-video-link {
+  display: inline-flex; align-items: center; font-size: 13px; font-weight: 700;
+  color: var(--gold-ink); padding: 11px 0;
+}
+.official-video-player {
+  position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px;
+  background: var(--navy); box-shadow: 0 16px 36px rgba(11,34,64,.16);
+}
+.official-video-player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.video-poster {
+  position: absolute; inset: 0; width: 100%; border: 0; padding: 0; overflow: hidden;
+  background: var(--navy); cursor: pointer;
+}
+.video-poster::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, rgba(11,34,64,.28), rgba(11,34,64,.06));
+  transition: background .2s;
+}
+.video-poster:hover::after, .video-poster:focus-visible::after { background: rgba(11,34,64,.12); }
+.video-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.video-play {
+  position: absolute; z-index: 1; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 68px; height: 68px; display: grid; place-items: center; padding-left: 4px;
+  border-radius: 50%; color: #fff; background: var(--gold); font-size: 24px;
+  box-shadow: 0 8px 22px rgba(0,0,0,.28); transition: transform .2s, background .2s;
+}
+.video-poster:hover .video-play, .video-poster:focus-visible .video-play {
+  transform: translate(-50%, -50%) scale(1.08); background: var(--gold-deep);
+}
+
 /* ─── Section Shared ─────────────────────────────── */
 .section { padding: 88px 40px; }
 .container { max-width: 1060px; margin: 0 auto; }
@@ -439,6 +481,9 @@ footer {
   .section { padding: 64px 22px; }
   .hero { padding: 96px 22px 72px; }
   .hero-stats { gap: 28px; flex-wrap: wrap; }
+  .official-video { padding: 64px 22px; }
+  .official-video-grid { grid-template-columns: 1fr; gap: 28px; }
+  .official-video-player { order: -1; }
 
   .ov-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
   .participants-wrap { grid-template-columns: 1fr; }
@@ -514,6 +559,27 @@ footer {
   <div class="scroll-hint">
     <span>Scroll</span>
     <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ═══ OFFICIAL VIDEO ════════════════════════════════════════════════════════ -->
+<section class="official-video" id="video">
+  <div class="container official-video-grid">
+    <div class="official-video-copy">
+      <p class="sec-tag">OISC Official Video</p>
+      <h2 class="sec-title">Meet OISC in 53 seconds.</h2>
+      <p>See how students connect, research, discuss, and present with international peers through one shared online conference experience.</p>
+      <div class="official-video-actions">
+        <a href="https://forms.gle/Yn5fRtD3HVcjsNHC9" target="_blank" rel="noopener" class="btn-primary">Register for OISC 2026 →</a>
+        <a href="https://www.youtube.com/watch?v=zQdyTTWN5Eg" target="_blank" rel="noopener" class="official-video-link">Watch on YouTube ↗</a>
+      </div>
+    </div>
+    <div class="official-video-player">
+      <button class="video-poster" type="button" data-oisc-video="zQdyTTWN5Eg" aria-label="Play Introduction to OISC">
+        <img src="https://i.ytimg.com/vi/zQdyTTWN5Eg/maxresdefault.jpg" alt="Introduction to OISC video preview" loading="lazy">
+        <span class="video-play" aria-hidden="true">▶</span>
+      </button>
+    </div>
   </div>
 </section>
 
@@ -1065,6 +1131,21 @@ footer {
       navToggle.classList.remove('open');
       navToggle.setAttribute('aria-expanded', 'false');
     }));
+  }
+
+  // ── Official video: keep the first page load light until the visitor plays it.
+  const officialVideo = document.querySelector('[data-oisc-video]');
+  if (officialVideo) {
+    officialVideo.addEventListener('click', () => {
+      const videoId = officialVideo.dataset.oiscVideo;
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
+      iframe.title = 'Introduction to OISC';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+      iframe.allowFullscreen = true;
+      officialVideo.replaceWith(iframe);
+    }, { once: true });
   }
 
   // ── Parallax ──────────────────────────────────────────
