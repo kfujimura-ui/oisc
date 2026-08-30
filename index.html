@@ -155,30 +155,10 @@ img { max-width: 100%; }
   color: var(--gold-ink); padding: 11px 0;
 }
 .official-video-player {
-  position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px;
+  position: relative; aspect-ratio: 16 / 9; overflow: hidden;
   background: var(--navy); box-shadow: 0 16px 36px rgba(11,34,64,.16);
 }
 .official-video-player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-.video-poster {
-  position: absolute; inset: 0; width: 100%; border: 0; padding: 0; overflow: hidden;
-  background: var(--navy); cursor: pointer;
-}
-.video-poster::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(90deg, rgba(11,34,64,.28), rgba(11,34,64,.06));
-  transition: background .2s;
-}
-.video-poster:hover::after, .video-poster:focus-visible::after { background: rgba(11,34,64,.12); }
-.video-poster img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.video-play {
-  position: absolute; z-index: 1; top: 50%; left: 50%; transform: translate(-50%, -50%);
-  width: 68px; height: 68px; display: grid; place-items: center; padding-left: 4px;
-  border-radius: 50%; color: #fff; background: var(--gold); font-size: 24px;
-  box-shadow: 0 8px 22px rgba(0,0,0,.28); transition: transform .2s, background .2s;
-}
-.video-poster:hover .video-play, .video-poster:focus-visible .video-play {
-  transform: translate(-50%, -50%) scale(1.08); background: var(--gold-deep);
-}
 
 /* ─── Section Shared ─────────────────────────────── */
 .section { padding: 88px 40px; }
@@ -575,10 +555,13 @@ footer {
       </div>
     </div>
     <div class="official-video-player">
-      <button class="video-poster" type="button" data-oisc-video="zQdyTTWN5Eg" aria-label="Play Introduction to OISC">
-        <img src="https://i.ytimg.com/vi/zQdyTTWN5Eg/maxresdefault.jpg" alt="Introduction to OISC video preview" loading="lazy">
-        <span class="video-play" aria-hidden="true">▶</span>
-      </button>
+      <iframe
+        src="https://www.youtube.com/embed/zQdyTTWN5Eg?rel=0"
+        title="Introduction to OISC"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen>
+      </iframe>
     </div>
   </div>
 </section>
@@ -1131,21 +1114,6 @@ footer {
       navToggle.classList.remove('open');
       navToggle.setAttribute('aria-expanded', 'false');
     }));
-  }
-
-  // ── Official video: keep the first page load light until the visitor plays it.
-  const officialVideo = document.querySelector('[data-oisc-video]');
-  if (officialVideo) {
-    officialVideo.addEventListener('click', () => {
-      const videoId = officialVideo.dataset.oiscVideo;
-      const iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`;
-      iframe.title = 'Introduction to OISC';
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-      iframe.referrerPolicy = 'strict-origin-when-cross-origin';
-      iframe.allowFullscreen = true;
-      officialVideo.replaceWith(iframe);
-    }, { once: true });
   }
 
   // ── Parallax ──────────────────────────────────────────
