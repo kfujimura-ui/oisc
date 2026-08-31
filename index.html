@@ -104,7 +104,17 @@ img { max-width: 100%; }
   line-height: 1.5; margin-bottom: 10px;
   text-shadow: 0 1px 10px rgba(0,0,0,.5);
 }
-.hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 56px; }
+.hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 14px; }
+.hero-eligibility-note {
+  max-width: 680px; margin: 0 auto 46px;
+  color: rgba(255,255,255,.68); font-size: 12px; line-height: 1.7;
+  text-shadow: 0 1px 8px rgba(0,0,0,.45);
+}
+.hero-eligibility-note a {
+  color: rgba(255,255,255,.86); text-decoration: underline;
+  text-decoration-thickness: 1px; text-underline-offset: 3px;
+}
+.hero-eligibility-note a:hover { color: #fff; }
 .btn-primary {
   background: var(--gold); color: #2a1c05; font-size: 14px; font-weight: 700;
   padding: 13px 30px; border-radius: 6px; letter-spacing: .02em;
@@ -516,6 +526,9 @@ footer {
       <a href="#participants" class="btn-primary">For Delegates →</a>
       <a href="#overview" class="btn-ghost">Learn More</a>
     </div>
+    <p class="hero-eligibility-note">
+      Registration is available to students from <a href="#about">Partner Institutions</a>. Students from other institutions should ask their faculty or institution to contact OISC before applying.
+    </p>
     <div class="hero-stats">
       <div class="stat">
         <span class="stat-num">11</span>
