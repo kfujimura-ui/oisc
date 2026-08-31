@@ -194,6 +194,16 @@ img { max-width: 100%; }
   display: inline-flex; align-items: center; gap: 4px;
   white-space: nowrap;
 }
+.gcli-cta {
+  display: grid; grid-template-columns: minmax(220px, .95fr) minmax(240px, 1.05fr);
+  margin-top: 28px; border: 1px solid var(--border); background: #104f58;
+  color: #fff; text-decoration: none; overflow: hidden;
+}
+.gcli-cta img { width: 100%; height: 100%; min-height: 154px; object-fit: cover; object-position: center; display: block; }
+.gcli-cta-copy { display: flex; flex-direction: column; justify-content: center; gap: 10px; padding: 26px 28px; }
+.gcli-cta-copy small { color: #f0bb5a; font-size: 10px; font-weight: 800; letter-spacing: .12em; line-height: 1.35; }
+.gcli-cta-copy strong { font-size: clamp(21px, 2.2vw, 32px); line-height: 1.12; }
+.gcli-cta-copy span { color: #fff; font-size: 13px; font-weight: 800; }
 
 /* ─── ① Participants ─────────────────────────────── */
 #participants { background: var(--light); }
@@ -792,7 +802,14 @@ footer {
           <div class="a-stat"><span class="n" style="display:block">2020</span><span class="l" style="display:block">Founded</span></div>
           <div class="a-stat"><span class="n">2×/yr</span><span class="l">Sessions</span></div>
         </div>
-        <a href="https://kfujimura-ui.github.io/GCLI/" target="_blank" rel="noopener" class="see-all-link" style="margin-top:8px;display:inline-flex;">About Global Collaborative Learning Initiative →</a>
+        <a href="https://gcli.site/" target="_blank" rel="noopener" class="gcli-cta">
+          <img src="./Images/gcli-social-share-v2.png" alt="GCLI — Global Collaborative Learning Initiative">
+          <span class="gcli-cta-copy">
+            <small>GLOBAL COLLABORATIVE LEARNING INITIATIVE</small>
+            <strong>Active Learning Across Borders, Online.</strong>
+            <span>Visit GCLI →</span>
+          </span>
+        </a>
         <div style="margin-top:28px;padding-top:24px;border-top:1px solid var(--border)">
           <p style="font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:14px">Partner Institutions 2026</p>
           <div class="inst-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
