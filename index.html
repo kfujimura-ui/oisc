@@ -187,6 +187,9 @@ img { max-width: 100%; }
   font-size: 34px; font-weight: 800; letter-spacing: -.02em;
   line-height: 1.2; margin-bottom: 12px;
 }
+.about-title { max-width: 760px; }
+.about-title-main { display: block; }
+.about-title-org { display: block; margin-top: 6px; color: var(--teal); font-size: .58em; line-height: 1.2; letter-spacing: .01em; }
 .sec-desc { font-size: 15px; color: var(--muted); max-width: 500px; line-height: 1.75; }
 .sec-header { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 36px; }
 .see-all-link {
@@ -790,7 +793,10 @@ footer {
 <section class="section" id="about" style="background:var(--white)">
   <div class="container">
     <p class="sec-tag">④ About Us</p>
-    <h2 class="sec-title">Who We Are</h2>
+    <h2 class="sec-title about-title">
+      <span class="about-title-main">Who We Are:</span>
+      <span class="about-title-org">Global Collaborative Learning Initiative (GCLI)</span>
+    </h2>
     <div class="about-layout">
       <div class="about-desc">
         <p>OISC is a multi-institutional, multi-country online COIL (Collaborative Online International Learning)-like program, founded in 2020.</p>
