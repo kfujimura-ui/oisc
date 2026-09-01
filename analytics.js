@@ -51,7 +51,7 @@
       page_type: pageType(),
       section: sectionFor(link),
       link_label: labelFor(link),
-      link_url: url.href.slice(0, 300),
+      link_url: url.origin + url.pathname,
       link_type: isAuth ? 'auth' : (sameSite ? 'internal' : 'external')
     });
   }, { passive: true });
