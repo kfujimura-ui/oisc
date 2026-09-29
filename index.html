@@ -762,7 +762,7 @@ footer {
             <span>X (Twitter) Timeline</span>
           </div>
         </div>
-        <div class="x-embed">
+        <div class="x-embed" data-news-x>
           <blockquote class="twitter-tweet" data-dnt="true" data-theme="light">
             <p lang="en" dir="ltr">New OISC learning resource: Your OISC Project: Make It Original with RACO See how Research, Authoring, Collaboration, and Output support original student work. Faculty and educators are welcome to use and share this resource: <a href="https://youtu.be/uxy3C2yP9EY">youtu.be/uxy3C2yP9EY</a> #OISC2026 #RACO</p>
             <a href="https://x.com/OISC_official/status/2104818976593461569">September 29, 2026</a>
@@ -781,7 +781,7 @@ footer {
             <span>Latest Videos &amp; Presentation Archive</span>
           </div>
         </div>
-        <div class="youtube-embed">
+        <div class="youtube-embed" data-news-youtube>
           <iframe
             src="https://www.youtube.com/embed/uxy3C2yP9EY"
             title="Your OISC Project: Make It Original with RACO"
@@ -1117,6 +1117,54 @@ footer {
     const xWidth = Math.floor(xEmbed.getBoundingClientRect().width);
     xPost.setAttribute('data-width', String(Math.max(250, Math.min(550, xWidth))));
   }
+
+  // News data is updated once after each approved X post. Keep the current
+  // markup as a safe fallback if the data file is unavailable or invalid.
+  const NEWS_DATA_URL = './content/news/latest.json';
+  const newsEsc = value => String(value).replace(/[&<>"']/g, char => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[char]));
+  const validNewsData = data => {
+    const x = data?.x || {};
+    const y = data?.youtube || {};
+    const tags = Array.isArray(x.tags) ? x.tags : [];
+    const xUrl = /^https:\/\/x\.com\/OISC_official\/status\/\d+$/.test(String(x.url || ''));
+    const yId = /^[A-Za-z0-9_-]{11}$/.test(String(y.videoId || ''));
+    const yUrl = String(y.url || '') === `https://youtu.be/${y.videoId}`;
+    const english = /^[\x00-\x7F]+$/.test(String(x.text || '')) && /[A-Za-z]/.test(String(x.text || ''));
+    return xUrl && english && /^\d{4}-\d{2}-\d{2}$/.test(String(x.publishedAt || '')) &&
+      tags.length > 0 && tags.every(tag => /^#[A-Za-z0-9]+$/.test(String(tag))) &&
+      yId && yUrl && String(y.title || '').trim().length > 0;
+  };
+  const renderNewsData = data => {
+    const x = data.x;
+    const y = data.youtube;
+    const xEmbed = document.querySelector('[data-news-x]');
+    const yEmbed = document.querySelector('[data-news-youtube]');
+    if (xEmbed) {
+      xEmbed.innerHTML = `<blockquote class="twitter-tweet" data-dnt="true" data-theme="light">` +
+        `<p lang="en" dir="ltr">${newsEsc(x.text)} <a href="${newsEsc(y.url)}">${newsEsc(y.url.replace('https://', ''))}</a> ${x.tags.map(newsEsc).join(' ')}</p>` +
+        `<a href="${newsEsc(x.url)}">${newsEsc(x.date)}</a></blockquote>`;
+      const post = xEmbed.querySelector('.twitter-tweet');
+      if (post) post.setAttribute('data-width', String(Math.max(250, Math.min(550, Math.floor(xEmbed.getBoundingClientRect().width)))));
+      const loadXWidget = attempts => {
+        if (window.twttr?.widgets) window.twttr.widgets.load(xEmbed);
+        else if (attempts > 0) window.setTimeout(() => loadXWidget(attempts - 1), 100);
+      };
+      loadXWidget(20);
+    }
+    if (yEmbed) {
+      const iframe = yEmbed.querySelector('iframe');
+      if (iframe) {
+        iframe.src = `https://www.youtube.com/embed/${encodeURIComponent(y.videoId)}`;
+        iframe.title = y.title;
+      }
+    }
+  };
+  fetch(NEWS_DATA_URL, { cache: 'no-cache' })
+    .then(response => response.ok ? response.json() : Promise.reject(new Error('news-data-unavailable')))
+    .then(data => { if (validNewsData(data)) renderNewsData(data); })
+    .catch(() => { /* Keep the checked-in fallback markup. */ });
 </script>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <script>
