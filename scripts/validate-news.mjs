@@ -25,6 +25,7 @@ const videoId = /^[A-Za-z0-9_-]{11}$/.test(String(y.videoId || ''));
 const videoUrl = String(y.url || '') === `https://youtu.be/${y.videoId}`;
 const title = typeof y.title === 'string' && y.title.trim().length > 0;
 
+if (!/^https:\/\/[^\s]+$/.test(String(x.link || ''))) fail('x.link must be an HTTPS URL');
 if (!xUrl) fail('x.url must be an OISC_official status URL');
 if (!english) fail('x.text must be non-empty English/ASCII text');
 if (!date) fail('x.publishedAt must use YYYY-MM-DD');
@@ -35,3 +36,4 @@ if (!title) fail('youtube.title must be non-empty');
 
 if (process.exitCode) process.exit();
 console.log(`News data valid: ${file}`);
+

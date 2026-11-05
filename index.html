@@ -763,8 +763,8 @@ footer {
         </div>
         <div class="x-embed" data-news-x>
           <blockquote class="twitter-tweet" data-dnt="true" data-theme="light">
-            <p lang="en" dir="ltr">New OISC learning resource: Your OISC Project: Make It Original with RACO See how Research, Authoring, Collaboration, and Output support original student work. Faculty and educators are welcome to use and share this resource: <a href="https://youtu.be/uxy3C2yP9EY">youtu.be/uxy3C2yP9EY</a> #OISC2026 #RACO</p>
-            <a href="https://x.com/OISC_official/status/2104818976593461569">September 29, 2026</a>
+            <p lang="en" dir="ltr">First hellos from around the world. OISC delegates introduce themselves ahead of Day 1 on November 7. Meet the students beginning this international exchange. <a href="https://oisc.site/">oisc.site/</a> #OISC2026 #GlobalLearning</p>
+            <a href="https://x.com/OISC_official/status/2118252135447986370">November 5, 2026</a>
           </blockquote>
         </div>
         <div class="embed-note" style="border-top:1px solid var(--border);">
@@ -1128,10 +1128,11 @@ footer {
     const y = data?.youtube || {};
     const tags = Array.isArray(x.tags) ? x.tags : [];
     const xUrl = /^https:\/\/x\.com\/OISC_official\/status\/\d+$/.test(String(x.url || ''));
+    const xLink = /^https:\/\/[^\s]+$/.test(String(x.link || ''));
     const yId = /^[A-Za-z0-9_-]{11}$/.test(String(y.videoId || ''));
     const yUrl = String(y.url || '') === `https://youtu.be/${y.videoId}`;
     const english = /^[\x00-\x7F]+$/.test(String(x.text || '')) && /[A-Za-z]/.test(String(x.text || ''));
-    return xUrl && english && /^\d{4}-\d{2}-\d{2}$/.test(String(x.publishedAt || '')) &&
+    return xUrl && xLink && english && /^\d{4}-\d{2}-\d{2}$/.test(String(x.publishedAt || '')) &&
       tags.length > 0 && tags.every(tag => /^#[A-Za-z0-9]+$/.test(String(tag))) &&
       yId && yUrl && String(y.title || '').trim().length > 0;
   };
@@ -1142,7 +1143,7 @@ footer {
     const yEmbed = document.querySelector('[data-news-youtube]');
     if (xEmbed) {
       xEmbed.innerHTML = `<blockquote class="twitter-tweet" data-dnt="true" data-theme="light">` +
-        `<p lang="en" dir="ltr">${newsEsc(x.text)} <a href="${newsEsc(y.url)}">${newsEsc(y.url.replace('https://', ''))}</a> ${x.tags.map(newsEsc).join(' ')}</p>` +
+        `<p lang="en" dir="ltr">${newsEsc(x.text)} <a href="${newsEsc(x.link)}">${newsEsc(x.link.replace('https://', ''))}</a> ${x.tags.map(newsEsc).join(' ')}</p>` +
         `<a href="${newsEsc(x.url)}">${newsEsc(x.date)}</a></blockquote>`;
       const post = xEmbed.querySelector('.twitter-tweet');
       if (post) post.setAttribute('data-width', String(Math.max(250, Math.min(550, Math.floor(xEmbed.getBoundingClientRect().width)))));
@@ -1234,4 +1235,5 @@ footer {
 </script>
 </body>
 </html>
+
 
